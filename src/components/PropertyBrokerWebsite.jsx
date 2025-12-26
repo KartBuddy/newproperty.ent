@@ -147,59 +147,37 @@ const PropertyBrokerWebsite = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
-              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">
-                Elite Properties
+              <h1 className="text-lg sm:text-xl font-bold text-gray-800">
+                New Property Enterprises
               </h1>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-4 lg:space-x-8">
-              <button
-                onClick={() => handleNavClick("home")}
-                className={`${
-                  activeSection === "home"
-                    ? "text-white-600 border-b-2 border-blue-600"
-                    : "text-gray-600"
-                } hover:text-blue-600 font-semibold pb-1 transition text-sm lg:text-base`}
-              >
-                Home
-              </button>
-              <button
-                onClick={() => handleNavClick("properties")}
-                className={`${
-                  activeSection === "properties"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-white-600"
-                } hover:text-white-600 font-semibold pb-1 transition text-sm lg:text-base`}
-              >
-                Property
-              </button>
-              <button
-                onClick={() => handleNavClick("about")}
-                className={`${
-                  activeSection === "about"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-white-600"
-                } hover:text-blue-600 font-semibold pb-1 transition text-sm lg:text-base`}
-              >
-                About Us
-              </button>
-              <button
-                onClick={() => handleNavClick("contact")}
-                className={`${
-                  activeSection === "contact"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-white-600"
-                } hover:text-blue-600 font-semibold pb-1 transition text-sm lg:text-base`}
-              >
-                Contact Us
-              </button>
+            <nav className="hidden md:flex items-center gap-4">
+              {[
+                { key: "home", label: "Home" },
+                { key: "properties", label: "Property" },
+                { key: "about", label: "About Us" },
+                { key: "contact", label: "Contact Us" },
+              ].map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => handleNavClick(item.key)}
+                  className={`px-6 py-3 rounded-xl font-semibold text-sm lg:text-base transition whitespace-nowrap ${
+                    activeSection === item.key
+                      ? "bg-black text-white shadow-md"
+                      : "bg-gray-900 text-white hover:bg-gray-700"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
             </nav>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-white-600 hover:text-blue-600"
+              className="md:hidden bg-gray-900 text-white p-2 rounded-xl"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -211,47 +189,25 @@ const PropertyBrokerWebsite = () => {
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <nav className="md:hidden mt-4 pb-4 space-y-2">
-              <button
-                onClick={() => handleNavClick("home")}
-                className={`block w-full text-left px-4 py-2 rounded-lg ${
-                  activeSection === "home"
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-600 hover:bg-gray-100"
-                } font-semibold transition`}
-              >
-                Home
-              </button>
-              <button
-                onClick={() => handleNavClick("properties")}
-                className={`block w-full text-left px-4 py-2 rounded-lg ${
-                  activeSection === "properties"
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-600 hover:bg-gray-100"
-                } font-semibold transition`}
-              >
-                Property
-              </button>
-              <button
-                onClick={() => handleNavClick("about")}
-                className={`block w-full text-left px-4 py-2 rounded-lg ${
-                  activeSection === "about"
-                    ? "bg-blue-600 text-white-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                } font-semibold transition`}
-              >
-                About Us
-              </button>
-              <button
-                onClick={() => handleNavClick("contact")}
-                className={`block w-full text-white-600 text-left px-4 py-2 rounded-lg ${
-                  activeSection === "contact"
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-600 hover:bg-gray-100"
-                } font-semibold transition`}
-              >
-                Contact Us
-              </button>
+            <nav className="md:hidden mt-4 space-y-2">
+              {[
+                { key: "home", label: "Home" },
+                { key: "properties", label: "Property" },
+                { key: "about", label: "About Us" },
+                { key: "contact", label: "Contact Us" },
+              ].map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => handleNavClick(item.key)}
+                  className={`block w-full text-left px-5 py-3 rounded-xl font-semibold transition ${
+                    activeSection === item.key
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
             </nav>
           )}
         </div>
@@ -405,8 +361,10 @@ const PropertyBrokerWebsite = () => {
       )}
 
       {/* About Us Section */}
+
+      {/* About Us Section */}
       {activeSection === "about" && (
-        <div className="w-full max-w-full px-6 lg:px-12 xl:px-16 2xl:px-24 py-12 lg:py-16">
+        <div className="w-full max-w-full px-6 lg:px-12 xl:px-16 2xl:px-24 py-8 lg:py-20">
           <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 lg:p-12">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 mb-8 lg:mb-12">
               About Us
@@ -480,6 +438,71 @@ const PropertyBrokerWebsite = () => {
                     <li>✓ End-to-End Support</li>
                   </ul>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Our Team Section */}
+          <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 lg:p-12 mt-8 lg:mt-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-8 lg:mb-12 text-center">
+              Our Team
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {/* Team Member 1 */}
+              <div className="bg-gradient-to-b from-blue-50 to-white rounded-xl p-6 text-center hover:shadow-lg transition">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-3xl sm:text-4xl text-white font-bold">
+                    RK
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+                  Rajesh Kumar
+                </h3>
+                <p className="text-blue-600 font-semibold mb-3">
+                  Founder & CEO
+                </p>
+                <p className="text-sm sm:text-base text-gray-600">
+                  With 15+ years in real estate, Rajesh leads our team with
+                  expertise in luxury properties and commercial spaces.
+                </p>
+              </div>
+
+              {/* Team Member 2 */}
+              <div className="bg-gradient-to-b from-green-50 to-white rounded-xl p-6 text-center hover:shadow-lg transition">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 bg-green-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-3xl sm:text-4xl text-white font-bold">
+                    PS
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+                  Priya Sharma
+                </h3>
+                <p className="text-green-600 font-semibold mb-3">
+                  Sales Manager
+                </p>
+                <p className="text-sm sm:text-base text-gray-600">
+                  Priya specializes in residential properties and has helped
+                  over 200 families find their dream homes.
+                </p>
+              </div>
+
+              {/* Team Member 3 */}
+              <div className="bg-gradient-to-b from-purple-50 to-white rounded-xl p-6 text-center hover:shadow-lg transition">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 bg-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-3xl sm:text-4xl text-white font-bold">
+                    AM
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+                  Amit Mehta
+                </h3>
+                <p className="text-purple-600 font-semibold mb-3">
+                  Rental Specialist
+                </p>
+                <p className="text-sm sm:text-base text-gray-600">
+                  Amit handles all rental properties with a focus on matching
+                  clients with perfect rental solutions.
+                </p>
               </div>
             </div>
           </div>
