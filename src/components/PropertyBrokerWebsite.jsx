@@ -100,8 +100,23 @@ const PropertyBrokerWebsite = () => {
         "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
     },
   ];
+  const [propertyList, setPropertyList] = useState(properties);
+  const [showAddForm, setShowAddForm] = useState(false);
 
-  const filteredProperties = properties.filter((property) => {
+  const [newProperty, setNewProperty] = useState({
+    title: "",
+    type: "sale",
+    category: "residential",
+    price: "",
+    location: "",
+    bedrooms: "",
+    bathrooms: "",
+    area: "",
+    image: "",
+  });
+
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const filteredProperties = propertyList.filter((property) => {
     const matchesSearch =
       property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.location.toLowerCase().includes(searchTerm.toLowerCase());
@@ -223,12 +238,21 @@ const PropertyBrokerWebsite = () => {
             <p className="text-base sm:text-lg lg:text-2xl xl:text-3xl mb-8 lg:mb-10">
               Residential & Commercial Properties for Sale and Rent
             </p>
-            <button
-              onClick={() => handleNavClick("properties")}
-              className="bg-white text-white-600 px-8 lg:px-12 py-3 lg:py-4 rounded-lg font-semibold hover:bg-gray-100 transition text-base lg:text-lg xl:text-xl"
-            >
-              Browse Properties
-            </button>
+            <div className="flex justify-center items-center gap-4 mt-6">
+              <button
+                onClick={() => handleNavClick("properties")}
+                className="bg-white text-white-600 px-8 lg:px-12 py-3 lg:py-4 rounded-lg font-semibold hover:bg-gray-100 transition text-base lg:text-lg xl:text-xl"
+              >
+                Browse Properties
+              </button>
+
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="bg-green-600 text-white px-6 lg:px-8 py-3 lg:py-4 rounded-lg font-semibold hover:bg-green-700 transition text-base lg:text-lg"
+              >
+                + Add Property
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -291,14 +315,15 @@ const PropertyBrokerWebsite = () => {
             {filteredProperties.map((property) => (
               <div
                 key={property.id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition"
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition flex flex-col h-full"
               >
                 <div className="relative">
                   <img
                     src={property.image}
                     alt={property.title}
-                    className="w-full h-48 lg:h-64 xl:h-72 object-cover"
+                    className="w-full h-48 sm:h-52 lg:h-60 xl:h-64 object-cover"
                   />
+
                   <span
                     className={`absolute top-3 sm:top-4 right-3 sm:right-4 px-2 sm:px-3 py-1 rounded-full text-white text-xs sm:text-sm font-semibold ${
                       property.type === "sale"
@@ -309,7 +334,7 @@ const PropertyBrokerWebsite = () => {
                     For {property.type === "sale" ? "Sale" : "Rent"}
                   </span>
                 </div>
-                <div className="p-4 sm:p-5">
+                <div className="p-4 sm:p-5 flex flex-col flex-1">
                   <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
                     {property.title}
                   </h3>
@@ -338,10 +363,14 @@ const PropertyBrokerWebsite = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xl sm:text-2xl font-bold text-blue-600">
+                    <span className="text-lg sm:text-xl font-bold text-blue-600 truncate max-w-[55%]">
                       {property.price}
                     </span>
-                    <button className="bg-blue-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-blue-700 transition text-xs sm:text-sm">
+
+                    <button
+                      onClick={() => setSelectedProperty(property)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+                    >
                       View Details
                     </button>
                   </div>
@@ -594,6 +623,185 @@ const PropertyBrokerWebsite = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {selectedProperty && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full p-6 relative shadow-xl">
+            <button
+              onClick={() => setSelectedProperty(null)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
+            >
+              ✕
+            </button>
+
+            <img
+              src={selectedProperty.image}
+              alt={selectedProperty.title}
+              className="w-full h-60 object-cover rounded-lg mb-4"
+            />
+
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">
+              {selectedProperty.title}
+            </h3>
+
+            <p className="text-gray-600 mb-3 flex items-center">
+              <MapPin className="w-4 h-4 mr-1" />
+              {selectedProperty.location}
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+              {selectedProperty.bedrooms > 0 && (
+                <p>🛏 {selectedProperty.bedrooms} Bedrooms</p>
+              )}
+              <p>🛁 {selectedProperty.bathrooms} Bathrooms</p>
+              <p>📐 {selectedProperty.area}</p>
+              <p>💰 {selectedProperty.price}</p>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={() => setSelectedProperty(null)}
+                className="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAddForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-xl max-w-xl w-full p-6 shadow-xl relative">
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
+            >
+              ✕
+            </button>
+
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              Add New Property
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                type="text"
+                placeholder="Property Title"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500"
+                value={newProperty.title}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, title: e.target.value })
+                }
+              />
+
+              <select
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500"
+                value={newProperty.type}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, type: e.target.value })
+                }
+              >
+                <option value="sale">For Sale</option>
+                <option value="rent">For Rent</option>
+              </select>
+
+              <input
+                type="text"
+                placeholder="Price (e.g. ₹50,000/month or ₹2 Cr)"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500"
+                value={newProperty.price}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, price: e.target.value })
+                }
+              />
+
+              <input
+                type="text"
+                placeholder="Location"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500"
+                value={newProperty.location}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, location: e.target.value })
+                }
+              />
+
+              <input
+                type="number"
+                placeholder="Bedrooms"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500"
+                value={newProperty.bedrooms}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, bedrooms: e.target.value })
+                }
+              />
+
+              <input
+                type="number"
+                placeholder="Bathrooms"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500"
+                value={newProperty.bathrooms}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, bathrooms: e.target.value })
+                }
+              />
+
+              <input
+                type="text"
+                placeholder="Area (sq ft)"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500"
+                value={newProperty.area}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, area: e.target.value })
+                }
+              />
+
+              <input
+                type="text"
+                placeholder="Image URL"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500 sm:col-span-2"
+                value={newProperty.image}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, image: e.target.value })
+                }
+              />
+            </div>
+
+            <button
+              onClick={() => {
+                if (
+                  !newProperty.title ||
+                  !newProperty.price ||
+                  !newProperty.location
+                ) {
+                  alert("Please fill all required fields.");
+                  return;
+                }
+
+                setPropertyList([
+                  ...propertyList,
+                  { ...newProperty, id: Date.now() },
+                ]);
+                setNewProperty({
+                  title: "",
+                  type: "sale",
+                  category: "residential",
+                  price: "",
+                  location: "",
+                  bedrooms: "",
+                  bathrooms: "",
+                  area: "",
+                  image: "",
+                });
+                setShowAddForm(false);
+              }}
+              className="w-full mt-5 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              Save Property
+            </button>
           </div>
         </div>
       )}
