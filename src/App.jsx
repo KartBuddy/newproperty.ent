@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import PropertyBrokerWebsite from "./components/PropertyBrokerWebsite";
+import PropertyBrokerWebsite from "../src/pages/PropertyBrokerWebsite";
 import PropertyDetails from "./components/PropertyDetails";
 
 function App() {

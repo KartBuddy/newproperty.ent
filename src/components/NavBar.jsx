@@ -1,17 +1,35 @@
-import React from "react";
 import { Building2, Menu, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = ({
-  activeSection,
+  activeSection = "",
   handleNavClick,
-  mobileMenuOpen,
-  setMobileMenuOpen,
+  mobileMenuOpen = false,
+  setMobileMenuOpen = () => {},
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const onNavClick = (key) => {
+    if (location.pathname !== "/") {
+      navigate("/"); // go home first
+      setTimeout(() => {
+        handleNavClick?.(key); // then scroll/activate section
+      }, 50);
+    } else {
+      handleNavClick?.(key);
+    }
+    setMobileMenuOpen(false);
+  };
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50 w-full">
       <div className="w-full max-w-full px-6 lg:px-12 xl:px-16 2xl:px-24 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          <div
+            className="flex items-center space-x-2 sm:space-x-3 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
             <h1 className="text-lg sm:text-xl font-bold text-gray-800">
               New Property Enterprises
@@ -27,7 +45,7 @@ const Navbar = ({
             ].map((item) => (
               <button
                 key={item.key}
-                onClick={() => handleNavClick(item.key)}
+                onClick={() => onNavClick(item.key)}
                 className={`px-6 py-3 rounded-xl font-semibold text-sm lg:text-base transition whitespace-nowrap ${
                   activeSection === item.key
                     ? "bg-black text-white shadow-md"
@@ -61,7 +79,7 @@ const Navbar = ({
             ].map((item) => (
               <button
                 key={item.key}
-                onClick={() => handleNavClick(item.key)}
+                onClick={() => onNavClick(item.key)}
                 className={`block w-full text-left px-5 py-3 rounded-xl font-semibold transition ${
                   activeSection === item.key
                     ? "bg-blue-600 text-white"
