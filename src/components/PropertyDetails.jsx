@@ -4,6 +4,7 @@ import { MapPin, Bed, Bath, Square, Phone, Home } from "lucide-react";
 import { useEffect } from "react";
 import { Heart } from "lucide-react";
 import { useState } from "react";
+import Navbar from "./NavBar";
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -86,13 +87,8 @@ const PropertyDetails = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-white-600 hover:underline font-semibold"
-        >
-          ← Back to Listings
-        </button>
         {/* Property Heading */}
         <div className="bg-white text-black rounded-xl shadow p-6">
           <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
@@ -127,9 +123,11 @@ const PropertyDetails = () => {
                 className="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow hover:scale-105 transition"
               >
                 <Heart
-                  className={`w-6 h-6 ${
-                    liked ? "fill-red-500 text-red-500" : "text-gray-500"
+                  className={`w-6 h-6 transition ${
+                    liked ? "text-red-500" : "text-gray-500"
                   }`}
+                  fill={liked ? "currentColor" : "none"}
+                  strokeWidth={liked ? 2.5 : 2}
                 />
               </button>
             </div>
