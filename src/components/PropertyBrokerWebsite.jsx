@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { properties } from "../components/properties";
 
 const PropertyBrokerWebsite = () => {
   const [searchTerm, setSearchTerm] = useState("");
