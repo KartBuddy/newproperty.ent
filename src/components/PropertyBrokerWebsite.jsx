@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Home,
@@ -116,6 +116,21 @@ const PropertyBrokerWebsite = () => {
     image: "",
   });
 
+  const heroImages = [
+    "https://images.unsplash.com/photo-1600106485793-d463d45905bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTY3fHxpbmRpYSUyMGhvdXNlfGVufDB8fDB8fHww",
+    "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1600",
+    "https://images.unsplash.com/photo-1572120360610-d971b9b78825?w=1600",
+  ];
+
+  const [currentHero, setCurrentHero] = useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentHero((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   const [selectedProperty, setSelectedProperty] = useState(null);
   const filteredProperties = propertyList.filter((property) => {
     const matchesSearch =
@@ -232,25 +247,36 @@ const PropertyBrokerWebsite = () => {
 
       {/* Hero Section */}
       {activeSection === "home" && (
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 lg:py-28 xl:py-32 w-full">
-          <div className="w-full max-w-full px-6 lg:px-12 xl:px-16 2xl:px-24 text-center">
-            <h2 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold mb-6">
+        <div
+          className="relative w-full h-[80vh] flex items-center justify-center text-white"
+          style={{
+            backgroundImage: `url(${heroImages[currentHero]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transition: "background-image 1s ease-in-out",
+          }}
+        >
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/60"></div>
+
+          <div className="relative z-10 w-full max-w-full px-6 lg:px-12 xl:px-16 2xl:px-24 text-center">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold mb-6 drop-shadow-lg">
               Find Your Dream Property
             </h2>
-            <p className="text-base sm:text-lg lg:text-2xl xl:text-3xl mb-8 lg:mb-10">
+            <p className="text-base sm:text-lg lg:text-2xl xl:text-3xl mb-8 lg:mb-10 drop-shadow-md">
               Residential & Commercial Properties for Sale and Rent
             </p>
             <div className="flex justify-center items-center gap-4 mt-6">
               <button
                 onClick={() => handleNavClick("properties")}
-                className="bg-white text-white-600 px-8 lg:px-12 py-3 lg:py-4 rounded-lg font-semibold hover:bg-gray-100 transition text-base lg:text-lg xl:text-xl"
+                className="bg-white text-white-600 px-8 lg:px-12 py-3 lg:py-4 rounded-lg font-semibold hover:bg-gray-100 transition text-base lg:text-lg xl:text-xl shadow-md"
               >
                 Browse Properties
               </button>
 
               <button
                 onClick={() => setShowAddForm(true)}
-                className="bg-green-600 text-white px-6 lg:px-8 py-3 lg:py-4 rounded-lg font-semibold hover:bg-green-700 transition text-base lg:text-lg"
+                className="bg-green-600 text-white px-6 lg:px-8 py-3 lg:py-4 rounded-lg font-semibold hover:bg-green-700 transition text-base lg:text-lg shadow-md"
               >
                 + Add Property
               </button>
@@ -680,7 +706,7 @@ const PropertyBrokerWebsite = () => {
           <div className="bg-white rounded-xl max-w-xl w-full p-6 shadow-xl relative">
             <button
               onClick={() => setShowAddForm(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
+              className="absolute top-3 right-3 text-white-500 hover:text-gray-800 text-xl"
             >
               ✕
             </button>

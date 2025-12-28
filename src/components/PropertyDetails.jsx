@@ -1,30 +1,44 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { MapPin, Bed, Bath, Square } from "lucide-react";
 
 const dummyProperties = [
   {
     id: 1,
-    title: "1600 Sq-ft 4 BHK Flat For Sale in JVPD Scheme, Mumbai",
-    location: "JVPD Scheme, Mumbai",
-    price: "₹8.25 Cr",
-    emi: "₹2.86L",
-    area: "1600 sqft",
-    floor: "4 (Out of 6 Floors)",
-    transaction: "Resale",
-    status: "Ready to Move",
-    facing: "North",
-    furnished: "Furnished",
-    age: "Above 20 years",
-    additional: "1 Servant Room",
-    owner: "Sandeep",
-    phone: "+91-90XXXXXXXX",
-    images: [
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800",
-      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800",
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800",
-    ],
+    title: "Luxury Villa in Thane West",
+    type: "sale",
+    category: "residential",
+    price: "₹2.5 Cr",
+    location: "Thane West, Maharashtra",
+    bedrooms: 4,
+    bathrooms: 3,
+    area: "2400 sq ft",
+    image:
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
+  },
+  {
+    id: 2,
+    title: "Commercial Office Space",
+    type: "rent",
+    category: "commercial",
+    price: "₹85,000/month",
+    location: "Ghodbunder Road, Thane",
+    bedrooms: 0,
+    bathrooms: 2,
+    area: "1800 sq ft",
+    image:
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200",
+  },
+  {
+    id: 3,
+    title: "Modern 3BHK Apartment",
+    type: "sale",
+    category: "residential",
+    price: "₹1.8 Cr",
+    location: "Majiwada, Thane",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: "1650 sq ft",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
   },
 ];
 
@@ -36,126 +50,66 @@ const PropertyDetails = () => {
 
   if (!property) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <h1 className="text-2xl font-bold mb-2">Property Not Found</h1>
-        <p className="text-gray-600 mb-4">
-          The property you are looking for does not exist or was removed.
-        </p>
-        <button
-          onClick={() => navigate("/")}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg"
-        >
-          Go Back Home
-        </button>
+      <div className="min-h-screen flex items-center justify-center text-xl">
+        Property not found
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* Header */}
-      <div className="bg-white shadow sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-blue-600 font-medium"
-          >
-            ← Back
-          </button>
-          <span className="text-gray-600 text-sm">Property ID: 80895335</span>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-6 py-10">
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-6 text-white-600 font-semibold hover:underline"
+        >
+          ← Back to Properties
+        </button>
 
-      <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* LEFT CONTENT */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Price & Title */}
-          <div className="bg-white rounded-xl shadow p-5">
-            <div className="flex flex-wrap items-center gap-4 mb-2">
-              <h1 className="text-2xl font-bold">{property.price}</h1>
-              <span className="text-gray-600">EMI - {property.emi}</span>
-              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                PREMIUM LOCALITY
-              </span>
-            </div>
-            <h2 className="text-lg font-medium">{property.title}</h2>
-            <p className="text-gray-600 flex items-center mt-1">
-              <MapPin className="w-4 h-4 mr-1 text-blue-600" />
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <img
+            src={property.image}
+            alt={property.title}
+            className="w-full h-[420px] object-cover"
+          />
+
+          <div className="p-8">
+            <h1 className="text-3xl font-bold mb-3">{property.title}</h1>
+
+            <p className="flex items-center text-gray-600 mb-4">
+              <MapPin className="w-5 h-5 mr-2" />
               {property.location}
             </p>
-          </div>
 
-          {/* Image Gallery */}
-          <div className="bg-white rounded-xl shadow p-4 grid grid-cols-4 gap-2">
-            <img
-              src={property.images[0]}
-              className="col-span-4 md:col-span-2 row-span-2 h-72 w-full object-cover rounded-lg"
-            />
-            {property.images.slice(1, 5).map((img, i) => (
-              <img
-                key={i}
-                src={img}
-                className="h-36 w-full object-cover rounded-lg"
-              />
-            ))}
-          </div>
-
-          {/* Key Info */}
-          <div className="bg-white rounded-xl shadow p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <Info label="Super Built-Up Area" value={property.area} />
-            <Info label="Floor" value={property.floor} />
-            <Info label="Transaction Type" value={property.transaction} />
-            <Info label="Status" value={property.status} />
-            <Info label="Additional Rooms" value={property.additional} />
-            <Info label="Facing" value={property.facing} />
-            <Info label="Furnished Status" value={property.furnished} />
-            <Info label="Age Of Construction" value={property.age} />
-          </div>
-
-          {/* More Details */}
-          <div className="bg-white rounded-xl shadow p-5">
-            <h3 className="text-xl font-semibold mb-4">More Details</h3>
-            <div className="space-y-2 text-gray-700 text-sm">
-              <p>
-                <strong>Price Breakup:</strong> ₹8.25 Cr | ₹41,25,000
-                Registration
-              </p>
-              <p>
-                <strong>Address:</strong> JVPD Scheme, Western Mumbai,
-                Maharashtra
-              </p>
-              <p>
-                <strong>Furnishing:</strong> {property.furnished}
-              </p>
-              <p>
-                <strong>Description:</strong> Multistorey apartment is available
-                for sale in a good locality.
-              </p>
+            <div className="flex gap-6 text-gray-700 mb-6">
+              {property.bedrooms > 0 && (
+                <div className="flex items-center">
+                  <Bed className="w-5 h-5 mr-1" /> {property.bedrooms} Beds
+                </div>
+              )}
+              <div className="flex items-center">
+                <Bath className="w-5 h-5 mr-1" /> {property.bathrooms} Baths
+              </div>
+              <div className="flex items-center">
+                <Square className="w-5 h-5 mr-1" /> {property.area}
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* RIGHT SIDEBAR */}
-        <div className="space-y-4">
-          <div className="bg-white rounded-xl shadow p-5 sticky top-24">
-            <h3 className="text-lg font-semibold mb-2">Contact Owner</h3>
-            <p className="font-medium">{property.owner}</p>
-            <p className="text-gray-500 text-sm mb-4">{property.phone}</p>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full font-semibold">
-              Get Phone No.
-            </button>
+            <div className="text-2xl font-bold text-blue-600 mb-6">
+              {property.price}
+            </div>
+
+            <p className="text-gray-600 leading-relaxed">
+              This is a premium {property.category} property available for{" "}
+              {property.type}. Located in {property.location}, this property
+              offers excellent connectivity, modern amenities, and a great
+              investment opportunity.
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-const Info = ({ label, value }) => (
-  <div>
-    <p className="text-gray-500 text-xs">{label}</p>
-    <p className="font-medium">{value}</p>
-  </div>
-);
 
 export default PropertyDetails;
