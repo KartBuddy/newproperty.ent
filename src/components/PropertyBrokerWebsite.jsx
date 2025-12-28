@@ -13,6 +13,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const PropertyBrokerWebsite = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -153,6 +154,7 @@ const PropertyBrokerWebsite = () => {
       message: "",
     });
   };
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -368,7 +370,7 @@ const PropertyBrokerWebsite = () => {
                     </span>
 
                     <button
-                      onClick={() => setSelectedProperty(property)}
+                      onClick={() => navigate(`/property/${property.id}`)}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
                     >
                       View Details
