@@ -82,3 +82,11 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
