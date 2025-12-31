@@ -1,17 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Building2 } from "lucide-react";
+import { Eye, EyeOff, Building2, Loader2, AlertCircle } from "lucide-react";
+import { useLoginMutation } from "../features/api/apiSlice";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../features/auth/authSlice";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+    const [errorMsg, setErrorMsg] = useState("");
 
-    const handleLogin = (e) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [login, { isLoading }] = useLoginMutation();
+
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Simulate login and redirect to dashboard
-        navigate("/admin/overview");
+        setErrorMsg("");
+
+        try {
+            const response = await login({ email, password }).unwrap();
+            console.log(response);
+
+            if (response.success) {
+                dispatch(setCredentials({ user: response.user }));
+                navigate("/admin/overview");
+            }
+        } catch (err) {
+            console.error("Login failed:", err);
+            setErrorMsg(err.data?.message || "Invalid email or password. Please try again.");
+        }
     };
 
     return (
@@ -23,22 +42,30 @@ const Login = () => {
                         <Building2 size={28} />
                     </div>
                     <div className="space-y-2">
-                        <h1 className="text-4xl font-extrabold text-brand-900 tracking-tight">Welcome Back</h1>
+                        <h1 className="text-4xl font-extrabold text-brand-900 tracking-tight">Admin Portal</h1>
                         <p className="text-sm font-medium text-slate-400">
-                            Enter your email and password to access your account.
+                            Secure access for KartBuddy administrators.
                         </p>
                     </div>
                 </div>
 
                 {/* Login Form */}
                 <form onSubmit={handleLogin} className="space-y-6 text-left">
+                    {errorMsg && (
+                        <div className="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-start gap-3 animate-in fade-in slide-in-from-top-1 duration-300">
+                            <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                            <p className="text-sm font-medium text-red-600 leading-relaxed">{errorMsg}</p>
+                        </div>
+                    )}
+
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-slate-800 uppercase tracking-widest ml-1">Email</label>
                         <input
                             type="email"
                             required
-                            className="w-full px-5 py-4 bg-white border border-slate-200 rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all placeholder:text-slate-300 shadow-sm"
-                            placeholder="sellostore@company.com"
+                            disabled={isLoading}
+                            className="w-full px-5 py-4 bg-white border border-slate-200 rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all placeholder:text-slate-300 shadow-sm disabled:opacity-60 disabled:bg-slate-50"
+                            placeholder="admin@kartbuddy.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -50,7 +77,8 @@ const Login = () => {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 required
-                                className="w-full px-5 py-4 bg-white border border-slate-200 rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all placeholder:text-slate-300 shadow-sm"
+                                disabled={isLoading}
+                                className="w-full px-5 py-4 bg-white border border-slate-200 rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all placeholder:text-slate-300 shadow-sm disabled:opacity-60 disabled:bg-slate-50"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -70,41 +98,27 @@ const Login = () => {
                             <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-brand-700 focus:ring-brand-500 transition-all" />
                             <span className="text-xs font-bold text-slate-400 group-hover:text-slate-600 transition-colors">Remember Me</span>
                         </label>
-                        <button type="button" className="text-xs font-bold text-brand-700 hover:text-brand-900 transition-colors">
-                            Forgot Your Password?
-                        </button>
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full py-4 bg-brand-700 text-white rounded-2xl text-sm font-extrabold shadow-xl shadow-brand-200 hover:bg-brand-900 transition-all transform active:scale-[0.98]"
+                        disabled={isLoading}
+                        className="w-full py-4 bg-brand-700 text-white rounded-2xl text-sm font-extrabold shadow-xl shadow-brand-200 hover:bg-brand-900 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                        Log In
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                Validating...
+                            </>
+                        ) : (
+                            "Sign In to Dashboard"
+                        )}
                     </button>
                 </form>
 
-                {/* Or Login With */}
-                <div className="space-y-6">
-                    <div className="relative flex items-center justify-center">
-                        <div className="w-full border-t border-slate-100"></div>
-                        <span className="absolute px-4 bg-white text-[10px] font-bold text-slate-300 uppercase tracking-widest">Or Login With</span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <button className="flex items-center justify-center gap-3 py-3 border border-slate-200 rounded-2xl font-bold text-sm text-slate-600 hover:bg-slate-50 transition-all shadow-sm">
-                            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" className="w-5 h-5 object-contain" alt="Google" />
-                            Google
-                        </button>
-                        <button className="flex items-center justify-center gap-3 py-3 border border-slate-200 rounded-2xl font-bold text-sm text-slate-600 hover:bg-slate-50 transition-all shadow-sm">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" className="w-4 h-4 object-contain" alt="Apple" />
-                            Apple
-                        </button>
-                    </div>
-                </div>
-
                 {/* Footer */}
-                <p className="text-xs font-bold text-slate-400">
-                    Don't Have An Account? <button className="text-brand-700 hover:text-brand-900 transition-colors">Register Now.</button>
+                <p className="text-xs font-bold text-slate-400 border-t border-slate-100 pt-8">
+                    &copy; 2025 KartBuddy logistics pvt. ltd. All rights reserved.
                 </p>
             </div>
         </div>

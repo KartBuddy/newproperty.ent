@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useGetPropertiesQuery, useDeletePropertyMutation } from "../features/api/apiSlice";
-import { Plus, Search, Filter, Home, MapPin, Bath, Bed, Square, MoreVertical, Trash2, Edit, Building2 } from "lucide-react";
+import { Plus, Search, Filter, Home, MapPin, Bath, Bed, Square, MoreVertical, Trash2, Edit, Building2, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // ... (PropertyCard content stays exactly the same)
@@ -8,6 +8,10 @@ const PropertyCard = ({ property, onEdit, onDelete }) => (
     <div className="bg-white rounded-[32px] border border-slate-100 shadow-[0_10px_30px_rgba(15,40,84,0.03)] overflow-hidden hover:shadow-[0_20px_50px_rgba(15,40,84,0.08)] hover:-translate-y-1 transition-all duration-300 group">
         <div className="relative h-60">
             <img src={property.image} alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute top-5 left-5 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-2xl flex items-center gap-1.5 shadow-xl shadow-brand-900/10">
+                <Heart size={14} className="text-rose-500 fill-rose-500" />
+                <span className="text-[11px] font-extrabold text-brand-700">{property.likes || 0}</span>
+            </div>
             <div className="absolute top-5 right-5 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-2xl text-[11px] font-extrabold text-brand-700 shadow-xl shadow-brand-900/10 uppercase tracking-wider">
                 {property.type === 'sale' ? 'For Sale' : 'For Rent'}
             </div>

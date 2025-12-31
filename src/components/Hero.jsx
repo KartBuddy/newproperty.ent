@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Bed, Bath, Square } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Bed, Bath, Square, Heart } from "lucide-react";
 
 const Hero = ({
   activeSection,
@@ -79,9 +79,9 @@ const Hero = ({
             {featuredProperties[currentSlide].title}
           </h1>
 
-          <p className="text-xl md:text-2xl text-brand-100/80 mb-10 leading-relaxed font-medium max-w-2xl">
+          {/* <p className="text-xl md:text-2xl text-brand-100/80 mb-10 leading-relaxed font-medium max-w-2xl">
             {featuredProperties[currentSlide].description || "Discover premium living spaces verified for quality and comfort in the most sought-after locations."}
-          </p>
+          </p> */}
 
           <div className="flex flex-wrap items-center gap-8 mb-12 text-white/90">
             <div className="flex items-center gap-2">
@@ -100,6 +100,10 @@ const Hero = ({
               <div className="flex items-center gap-2">
                 <Square className="w-5 h-5 text-brand-400" />
                 <span className="font-bold">{featuredProperties[currentSlide].area}</span>
+              </div>
+              <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+                <Heart className={`w-5 h-5 ${featuredProperties[currentSlide].isLiked ? "text-rose-500 fill-rose-500" : "text-rose-500"}`} />
+                <span className="font-bold">{featuredProperties[currentSlide].likes || 0} Likes</span>
               </div>
             </div>
           </div>

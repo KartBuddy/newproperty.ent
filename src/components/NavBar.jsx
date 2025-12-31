@@ -5,7 +5,7 @@ const Navbar = ({
   activeSection = "",
   handleNavClick,
   mobileMenuOpen = false,
-  setMobileMenuOpen = () => {},
+  setMobileMenuOpen = () => { },
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,11 +50,10 @@ const Navbar = ({
               <button
                 key={item.key}
                 onClick={() => onNavClick(item.key)}
-                className={`text-sm font-semibold transition-colors duration-200 hover:text-brand-500 ${
-                  activeSection === item.key
+                className={`text-sm font-semibold transition-colors duration-200 hover:text-brand-500 ${activeSection === item.key
                     ? "text-brand-600"
                     : "text-slate-600"
-                }`}
+                  }`}
               >
                 {item.label}
               </button>
@@ -62,14 +61,6 @@ const Navbar = ({
           </nav>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate("/admin/login")}
-              className="hidden sm:flex items-center gap-2 bg-brand-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-800 transition-all shadow-md shadow-brand-900/10 active:scale-95"
-            >
-              Sign In
-              <ArrowRight className="w-4 h-4" />
-            </button>
-
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
@@ -91,24 +82,14 @@ const Navbar = ({
                 <button
                   key={item.key}
                   onClick={() => onNavClick(item.key)}
-                  className={`flex w-full items-center px-4 py-3 text-sm font-bold rounded-xl transition-colors ${
-                    activeSection === item.key
+                  className={`flex w-full items-center px-4 py-3 text-sm font-bold rounded-xl transition-colors ${activeSection === item.key
                       ? "bg-brand-50 text-brand-600"
                       : "text-slate-600 hover:bg-slate-50"
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </button>
               ))}
-              <div className="pt-2">
-                <button
-                  onClick={() => navigate("/admin/login")}
-                  className="w-full flex items-center justify-center gap-2 bg-brand-900 text-white px-4 py-4 rounded-xl text-sm font-bold hover:bg-brand-800 transition-all"
-                >
-                  Dashboard Access
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
             </div>
           </div>
         )}
