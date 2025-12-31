@@ -6,7 +6,7 @@ import {
   Clock, ShieldCheck, PlayCircle
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useGetPropertyByIdQuery, useGetPropertiesQuery, useAddInquiryMutation } from "../features/api/apiSlice";
+import { useGetPropertyByIdQuery, useGetPropertiesQuery, useAddInquiryMutation, useToggleLikeMutation } from "../features/api/apiSlice";
 import Navbar from "./NavBar";
 
 const PropertyDetails = () => {
@@ -20,6 +20,15 @@ const PropertyDetails = () => {
   const { data: property, isLoading: isPropertyLoading } = useGetPropertyByIdQuery(id);
   const { data: allProperties = [] } = useGetPropertiesQuery();
   const [addInquiry, { isLoading: isInquirySubmitting }] = useAddInquiryMutation();
+  const [toggleLike] = useToggleLikeMutation();
+
+  const handleLike = async () => {
+    try {
+      await toggleLike(property.id).unwrap();
+    } catch (err) {
+      console.error("Failed to toggle like:", err);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -118,11 +127,12 @@ const PropertyDetails = () => {
               </div>
 
               <button
-                onClick={() => setLiked(!liked)}
-                className="absolute top-6 right-6 w-14 h-14 bg-white rounded-3xl shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group/heart"
+                onClick={handleLike}
+                className="absolute top-6 right-6 w-auto px-4 h-14 bg-white rounded-3xl shadow-xl flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 group/heart"
               >
+                <span className="font-black text-slate-900">{property.likes || 0}</span>
                 <Heart
-                  className={`w-7 h-7 transition-colors duration-300 ${liked ? "text-rose-500 fill-rose-500" : "text-slate-400 group-hover/heart:text-rose-400"
+                  className={`w-7 h-7 transition-colors duration-300 ${property.isLiked ? "text-rose-500 fill-rose-500" : "text-slate-400 group-hover/heart:text-rose-400"
                     }`}
                   strokeWidth={2.5}
                 />
@@ -149,11 +159,11 @@ const PropertyDetails = () => {
                 <span className="w-2 h-8 bg-brand-500 rounded-full"></span>
                 Property Description
               </h2>
-              <div className="prose prose-slate max-w-none">
+              {/* <div className="prose prose-slate max-w-none">
                 <p className="text-slate-600 font-medium text-lg leading-relaxed whitespace-pre-wrap">
                   {property.description || "No description provided for this property."}
                 </p>
-              </div>
+              </div> */}
 
               <div className="mt-10 pt-10 border-t border-slate-50">
                 <h3 className="text-xl font-black text-slate-900 mb-6 font-capitalize">{property.property_type} Details</h3>
@@ -281,14 +291,33 @@ const PropertyDetails = () => {
 
             <div className="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-sm text-black">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-black text-slate-900">Loan Support</h3>
-                <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-                  <ShieldCheck className="w-6 h-6" />
+                <h3 className="text-2xl font-black text-slate-900">Bank Loan Offers</h3>
+                <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                  <Percent className="w-6 h-6" />
                 </div>
               </div>
-              <p className="text-slate-600 font-medium mb-6">Connect with our mortgage partners for exclusive interest rates starting at 8.4%.</p>
-              <button className="w-full bg-slate-900 text-white py-4 rounded-[1.25rem] font-black hover:bg-brand-500 transition-colors">
-                Apply for Loan
+
+              <div className="space-y-6 mb-8">
+                {[
+                  { bank: "HDFC Bank", rate: "8.35%", processing: "0.5%" },
+                  { bank: "SBI Home Loans", rate: "8.40%", processing: "Nil" },
+                  { bank: "ICICI Bank", rate: "8.45%", processing: "0.25%" },
+                ].map((offer, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div>
+                      <p className="font-extrabold text-slate-900">{offer.bank}</p>
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Processing: {offer.processing}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-emerald-600 font-black text-lg">{offer.rate}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase">Int. Rate</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button className="w-full bg-slate-900 text-white py-4 rounded-[1.25rem] font-black hover:bg-brand-500 transition-colors shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                Check Eligibility <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>

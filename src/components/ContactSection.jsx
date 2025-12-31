@@ -1,11 +1,47 @@
-import React from "react";
-import { Phone, Mail, MapPin, Send, MessageSquare } from "lucide-react";
+import React, { useState } from "react";
+import { Phone, Mail, MapPin, Send, MessageSquare, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { useSubmitContactMutation } from "../features/api/apiSlice";
 
 const ContactSection = ({ activeSection }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "Residential Sale",
+    message: ""
+  });
+
+  const [submitContact, { isLoading }] = useSubmitContactMutation();
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+
   if (activeSection !== "contact") return null;
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await submitContact(formData).unwrap();
+      setToast({ show: true, message: response.message, type: "success" });
+      setFormData({ name: "", email: "", phone: "", subject: "Residential Sale", message: "" });
+      setTimeout(() => setToast({ show: false, message: "", type: "success" }), 5000);
+    } catch (err) {
+      setToast({ show: true, message: err.data?.message || "Something went wrong. Please try again.", type: "error" });
+      setTimeout(() => setToast({ show: false, message: "", type: "success" }), 5000);
+    }
+  };
+
   return (
-    <section className="bg-slate-50 py-24" id="contact">
+    <section className="bg-slate-50 py-24 relative overflow-hidden" id="contact">
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className="fixed top-24 right-4 z-[100] animate-in slide-in-from-right duration-300">
+          <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${toast.type === "success" ? "bg-emerald-50 border-emerald-100 text-emerald-700" : "bg-rose-50 border-rose-100 text-rose-700"
+            }`}>
+            {toast.type === "success" ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+            <p className="text-sm font-black tracking-tight">{toast.message}</p>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 overflow-hidden border border-slate-100">
           <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -63,7 +99,7 @@ const ContactSection = ({ activeSection }) => {
             </div>
 
             {/* Form Column */}
-            <div className="p-12 lg:p-20 bg-white">
+            <form onSubmit={handleSubmit} className="p-12 lg:p-20 bg-white">
               <h3 className="text-3xl font-extrabold text-brand-900 tracking-tight mb-8">
                 Send a Message
               </h3>
@@ -74,6 +110,9 @@ const ContactSection = ({ activeSection }) => {
                     <label className="text-xs font-black text-slate-800 uppercase tracking-widest ml-1">Full Name</label>
                     <input
                       type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Courtney Henry"
                       className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-brand-900 font-medium placeholder:text-slate-300"
                     />
@@ -82,7 +121,21 @@ const ContactSection = ({ activeSection }) => {
                     <label className="text-xs font-black text-slate-800 uppercase tracking-widest ml-1">Email Address</label>
                     <input
                       type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="courtney@example.com"
+                      className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-brand-900 font-medium placeholder:text-slate-300"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-800 uppercase tracking-widest ml-1">Phone Number</label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+91 98765 43210"
                       className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-brand-900 font-medium placeholder:text-slate-300"
                     />
                   </div>
@@ -90,7 +143,11 @@ const ContactSection = ({ activeSection }) => {
 
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-800 uppercase tracking-widest ml-1">Property Interest</label>
-                  <select className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-brand-900 font-medium appearance-none">
+                  <select
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-brand-900 font-medium appearance-none outline-none"
+                  >
                     <option>Residential Sale</option>
                     <option>Commercial Lease</option>
                     <option>Property Management</option>
@@ -101,18 +158,33 @@ const ContactSection = ({ activeSection }) => {
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-800 uppercase tracking-widest ml-1">Your Message</label>
                   <textarea
+                    required
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Tell us about what you're looking for..."
                     rows="4"
                     className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-brand-900 font-medium placeholder:text-slate-300 resize-none"
                   />
                 </div>
 
-                <button className="w-full flex items-center justify-center gap-3 bg-brand-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-brand-800 transition-all active:scale-95 shadow-xl shadow-brand-900/10 group">
-                  Send Inquiry
-                  <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                <button
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center gap-3 bg-brand-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-brand-800 transition-all active:scale-95 shadow-xl shadow-brand-900/10 group disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <>
+                      Sending Message...
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      Send Inquiry
+                      <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </>
+                  )}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

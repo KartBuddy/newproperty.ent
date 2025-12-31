@@ -5,10 +5,21 @@ import Overview from "./admin-dashboard/Overview";
 import Properties from "./admin-dashboard/Properties";
 import AddPropertyPage from "./admin-dashboard/AddPropertyPage";
 import EditPropertyPage from "./admin-dashboard/EditPropertyPage";
+import Settings from "./admin-dashboard/Settings";
+import ContactMessages from "./admin-dashboard/ContactMessages";
+import ContactDetailView from "./admin-dashboard/ContactDetailView";
 import Login from "./admin-dashboard/Login";
 import PropertyBrokerWebsite from "./components/PropertyBrokerWebsite";
 import PropertyDetails from "./components/PropertyDetails";
 
+
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "./features/auth/authSlice";
+
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  return isAuthenticated ? children : <Navigate to="/admin/login" replace />;
+};
 
 function App() {
   return (
@@ -21,18 +32,23 @@ function App() {
       {/* Admin Login */}
       <Route path="/admin/login" element={<Login />} />
 
-      {/* Admin Dashboard Routes */}
-      <Route path="/admin" element={<DashboardLayout />}>
+      {/* Admin Dashboard Routes (Protected) */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="/admin/overview" replace />} />
         <Route path="overview" element={<Overview />} />
         <Route path="properties" element={<Properties />} />
         <Route path="properties/add" element={<AddPropertyPage />} />
         <Route path="properties/edit/:id" element={<EditPropertyPage />} />
-        <Route path="inbox" element={<div className="p-8"><h1 className="text-2xl font-bold">Inbox (Coming Soon)</h1></div>} />
-        <Route path="activity" element={<div className="p-8"><h1 className="text-2xl font-bold">Activity (Coming Soon)</h1></div>} />
-        <Route path="calendar" element={<div className="p-8"><h1 className="text-2xl font-bold">Calendar (Coming Soon)</h1></div>} />
-        <Route path="settings" element={<div className="p-8"><h1 className="text-2xl font-bold">Settings (Coming Soon)</h1></div>} />
-        <Route path="help" element={<div className="p-8"><h1 className="text-2xl font-bold">Help (Coming Soon)</h1></div>} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="messages" element={<ContactMessages />} />
+        <Route path="messages/:id" element={<ContactDetailView />} />
       </Route>
 
       {/* Catch-all Redirect */}

@@ -1,4 +1,4 @@
-import { Search, MapPin, Bed, Bath, Square, ArrowRight, SlidersHorizontal } from "lucide-react";
+import { Search, MapPin, Bed, Bath, Square, ArrowRight, SlidersHorizontal, Heart } from "lucide-react";
 
 const PropertiesSection = ({
   activeSection,
@@ -107,10 +107,14 @@ const PropertiesSection = ({
               </div>
 
               <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex items-start justify-between mb-3 px-1">
                   <h3 className="text-xl font-extrabold text-brand-900 leading-tight flex-1">
                     {property.title}
                   </h3>
+                  <div className="flex items-center gap-1 bg-rose-50 px-2 py-1 rounded-full">
+                    <Heart className={`w-3 h-3 ${property.isLiked ? "text-rose-500 fill-rose-500" : "text-rose-500"}`} />
+                    <span className="text-[10px] font-black text-rose-600">{property.likes || 0}</span>
+                  </div>
                 </div>
 
                 <div className="flex items-center text-slate-500 mb-6 font-medium text-sm">

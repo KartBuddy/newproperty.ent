@@ -5,13 +5,26 @@ import Header from "./Header";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
-        <div className="flex bg-slate-50 h-screen font-sans antialiased text-slate-900 overflow-hidden">
-            <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-            <div className="flex-1 flex flex-col h-full overflow-hidden">
-                <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-                <main className="flex-1 overflow-y-auto overflow-x-hidden p-8">
+        <div className="flex bg-slate-50 h-screen font-sans antialiased text-slate-900 overflow-hidden relative">
+            {/* Sidebar with mobile support */}
+            <Sidebar
+                collapsed={collapsed}
+                setCollapsed={setCollapsed}
+                isMobileMenuOpen={isMobileMenuOpen}
+                setIsMobileMenuOpen={setIsMobileMenuOpen}
+            />
+
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
+                <Header
+                    collapsed={collapsed}
+                    setCollapsed={setCollapsed}
+                    setIsMobileMenuOpen={setIsMobileMenuOpen}
+                />
+                <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8">
                     <div className="max-w-7xl mx-auto h-full">
                         <Outlet />
                     </div>
