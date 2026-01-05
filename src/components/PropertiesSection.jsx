@@ -90,12 +90,12 @@ const PropertiesSection = ({
                 <SlidersHorizontal className="w-4 h-4" />
                 Extended Filters
               </button>
-              <button
+              {/* <button
                 onClick={() => navigate("/admin/properties/add")}
                 className="hidden lg:flex items-center gap-2 bg-brand-900 text-white px-8 py-5 rounded-[1.8rem] font-black uppercase tracking-widest hover:bg-brand-800 transition-all active:scale-95 shadow-xl shadow-brand-900/10 text-xs"
               >
                 + Add Property
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
