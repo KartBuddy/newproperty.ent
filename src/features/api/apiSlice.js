@@ -1,122 +1,133 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+const BASE_URL = import.meta.url.VITE_BASE_URL;
 
 export const apiSlice = createApi({
-  reducerPath: 'api',
+  reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8000/api',
+    baseUrl: BASE_URL,
     prepareHeaders: (headers) => {
       // Optional: add any headers if needed
       return headers;
     },
-    credentials: 'include',
+    credentials: "include",
   }),
-  tagTypes: ['Properties', 'Inquiries'],
+  tagTypes: ["Properties", "Inquiries"],
   endpoints: (builder) => ({
     getDashboardStats: builder.query({
-      query: () => '/dashboard/stats',
-      providesTags: ['Properties', 'Inquiries'],
+      query: () => "/dashboard/stats",
+      providesTags: ["Properties", "Inquiries"],
     }),
     getProperties: builder.query({
       query: (params) => ({
-        url: '/properties',
+        url: "/properties",
         params: params, // Support filtering
       }),
-      providesTags: ['Properties'],
+      providesTags: ["Properties"],
       transformResponse: (response) => {
         const properties = response.properties || [];
-        return properties.map(p => {
+        return properties.map((p) => {
           // Identify if current visitor has liked this property via LocalStorage
-          const likedInStorage = JSON.parse(localStorage.getItem('kartbuddy_liked_status') || '{}');
+          const likedInStorage = JSON.parse(
+            localStorage.getItem("kartbuddy_liked_status") || "{}"
+          );
           const isLiked = !!likedInStorage[p.id];
 
           return {
             ...p,
             _id: p.id,
             location: `${p.city}, ${p.state}`,
-            type: p.status === 'rented' ? 'rent' : 'sale',
+            type: p.status === "rented" ? "rent" : "sale",
             area: `${p.area_sqft} sq ft`,
-            image: p.images && p.images.length > 0
-              ? `http://localhost:8000/${p.images[0]}`
-              : "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
+            image:
+              p.images && p.images.length > 0
+                ? `${BASE_URL}/${p.images[0]}`
+                : "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
             price_raw: p.price,
-            formattedPrice: new Intl.NumberFormat('en-IN', {
-              style: 'currency',
-              currency: 'INR',
-              maximumFractionDigits: 0
+            formattedPrice: new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+              maximumFractionDigits: 0,
             }).format(p.price),
             likes: p.likes || 0,
-            isLiked: isLiked
+            isLiked: isLiked,
           };
         });
-      }
+      },
     }),
     addProperty: builder.mutation({
       query: (newProperty) => ({
-        url: '/properties/create',
-        method: 'POST',
+        url: "/properties/create",
+        method: "POST",
         body: newProperty,
       }),
-      invalidatesTags: ['Properties'],
+      invalidatesTags: ["Properties"],
     }),
     getPropertyById: builder.query({
       query: (id) => `/properties/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Properties', id }],
+      providesTags: (result, error, id) => [{ type: "Properties", id }],
       transformResponse: (response) => {
         const p = response.property;
         if (!p) return null;
 
-        const likedInStorage = JSON.parse(localStorage.getItem('kartbuddy_liked_status') || '{}');
+        const likedInStorage = JSON.parse(
+          localStorage.getItem("kartbuddy_liked_status") || "{}"
+        );
         const isLiked = !!likedInStorage[p.id];
 
         return {
           ...p,
           _id: p.id,
           location: `${p.city}, ${p.state}`,
-          type: p.status === 'rented' ? 'rent' : 'sale',
+          type: p.status === "rented" ? "rent" : "sale",
           area: `${p.area_sqft} sq ft`,
-          image: p.images && p.images.length > 0
-            ? `http://localhost:8000/${p.images[0]}`
-            : "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
-          images: p.images && p.images.length > 0
-            ? p.images.map(img => `http://localhost:8000/${img}`)
-            : [],
+          image:
+            p.images && p.images.length > 0
+              ? `${BASE_URL}/${p.images[0]}`
+              : "https://images.unsplash.com/photo-16134`90493576-7fde63acd811?w=1200",
+          images:
+            p.images && p.images.length > 0
+              ? p.images.map((img) => `${BASE_URL}/${img}`)
+              : [],
           price_raw: p.price,
-          formattedPrice: new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            maximumFractionDigits: 0
+          formattedPrice: new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 0,
           }).format(p.price),
           likes: p.likes || 0,
-          isLiked: isLiked
+          isLiked: isLiked,
         };
       },
     }),
     addInquiry: builder.mutation({
       query: (inquiry) => ({
-        url: '/inquiries/create',
-        method: 'POST',
+        url: "/inquiries/create",
+        method: "POST",
         body: inquiry,
       }),
-      invalidatesTags: ['Inquiries'],
+      invalidatesTags: ["Inquiries"],
     }),
     deleteProperty: builder.mutation({
       query: (id) => ({
         url: `/properties/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['Properties'],
+      invalidatesTags: ["Properties"],
     }),
     updateProperty: builder.mutation({
       query: ({ id, formData }) => ({
         url: `/properties/${id}`,
-        method: 'PUT',
+        method: "PUT",
         body: formData,
       }),
-      invalidatesTags: ['Properties'],
+      invalidatesTags: ["Properties"],
     }),
     toggleLike: builder.mutation({
       query: (id) => {
-        const likedInStorage = JSON.parse(localStorage.getItem('kartbuddy_liked_status') || '{}');
+        const likedInStorage = JSON.parse(
+          localStorage.getItem("kartbuddy_liked_status") || "{}"
+        );
         const isLiked = !!likedInStorage[id];
 
         // Update local storage status
@@ -125,64 +136,70 @@ export const apiSlice = createApi({
         } else {
           likedInStorage[id] = true;
         }
-        localStorage.setItem('kartbuddy_liked_status', JSON.stringify(likedInStorage));
+        localStorage.setItem(
+          "kartbuddy_liked_status",
+          JSON.stringify(likedInStorage)
+        );
 
         return {
           url: `/properties/${id}/toggle-like`,
-          method: 'PATCH',
+          method: "PATCH",
           body: { increment: !isLiked },
         };
       },
-      invalidatesTags: (result, error, id) => [{ type: 'Properties', id }, 'Properties'],
+      invalidatesTags: (result, error, id) => [
+        { type: "Properties", id },
+        "Properties",
+      ],
     }),
     login: builder.mutation({
       query: (credentials) => ({
-        url: '/auth/login',
-        method: 'POST',
+        url: "/auth/login",
+        method: "POST",
         body: credentials,
       }),
     }),
     logout: builder.mutation({
       query: () => ({
-        url: '/auth/logout',
-        method: 'POST',
+        url: "/auth/logout",
+        method: "POST",
       }),
     }),
     updateProfile: builder.mutation({
       query: (userData) => ({
-        url: '/auth/update-profile',
-        method: 'PATCH',
+        url: "/auth/update-profile",
+        method: "PATCH",
         body: userData,
       }),
     }),
     updatePassword: builder.mutation({
       query: (passwordData) => ({
-        url: '/auth/update-password',
-        method: 'PATCH',
+        url: "/auth/update-password",
+        method: "PATCH",
         body: passwordData,
       }),
     }),
     submitContact: builder.mutation({
       query: (payload) => ({
-        url: '/contact',
-        method: 'POST',
+        url: "/contact",
+        method: "POST",
         body: payload,
       }),
     }),
     getContactSubmissions: builder.query({
-      query: () => '/contact',
-      providesTags: ['Inquiries'], // Re-using Inquiries tag for simplicity or add 'Contacts'
+      query: () => "/contact",
+      providesTags: ["Inquiries"], // Re-using Inquiries tag for simplicity or add 'Contacts'
     }),
     deleteContactSubmission: builder.mutation({
       query: (id) => ({
         url: `/contact/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['Inquiries'],
+      invalidatesTags: ["Inquiries"],
     }),
     getContactSubmissionById: builder.query({
       query: (id) => `/contact/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Inquiries', id }],
+      providesTags: (result, error, id) => [{ type: "Inquiries", id }],
     }),
   }),
 });
@@ -203,5 +220,5 @@ export const {
   useSubmitContactMutation,
   useGetContactSubmissionsQuery,
   useGetContactSubmissionByIdQuery,
-  useDeleteContactSubmissionMutation
+  useDeleteContactSubmissionMutation,
 } = apiSlice;

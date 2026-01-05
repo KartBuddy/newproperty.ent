@@ -8,7 +8,7 @@ import {
   Linkedin,
   ArrowUp,
 } from "lucide-react";
-import { data, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import Navbar from "./NavBar";
 import Hero from "./Hero";
 import PropertiesSection from "./PropertiesSection";
@@ -168,7 +168,9 @@ const PropertyBrokerWebsite = () => {
             </div>
 
             <div>
-              <h4 className="text-lg font-bold mb-8">Company</h4>
+              <Link to={"/admin"}>
+                <h4 className="text-lg font-bold mb-8">Company</h4>
+              </Link>
               <ul className="space-y-4 text-brand-200 font-medium">
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
