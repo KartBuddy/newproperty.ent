@@ -19,7 +19,7 @@ const PropertyCard = ({ property, onEdit, onDelete }) => (
         <div className="p-7">
             <div className="flex justify-between items-start mb-3">
                 <h3 className="text-base font-bold text-brand-900 line-clamp-1 flex-1 pr-4">{property.title}</h3>
-                <div className="text-brand-700 font-extrabold text-sm tracking-tight">{property.price}</div>
+                <div className="text-brand-700 font-extrabold text-sm tracking-tight">{property.formattedPrice}</div>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-6 font-medium">
                 <MapPin size={14} className="text-brand-300" />
@@ -89,7 +89,7 @@ const Properties = () => {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
                     <h2 className="text-3xl font-extrabold text-brand-900 tracking-tight">Manage Properties</h2>
-                    <p className="text-sm font-bold text-brand-400 mt-1 uppercase tracking-[0.1em]">Browse and update your listings</p>
+                    <p className="text-sm font-bold text-brand-400 mt-1 uppercase tracking-widest">Browse and update your listings</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     <div className="relative group min-w-[300px]">
@@ -107,7 +107,7 @@ const Properties = () => {
                     </button>
                     <button
                         onClick={() => navigate("/admin/properties/add")}
-                        className="flex items-center gap-2.5 px-8 py-4 bg-brand-700 text-white rounded-[24px] text-sm font-extrabold hover:bg-brand-900 transition-all shadow-2xl shadow-brand-200 flex-shrink-0"
+                        className="flex items-center gap-2.5 px-8 py-4 bg-brand-700 text-white rounded-[24px] text-sm font-extrabold hover:bg-brand-900 transition-all shadow-2xl shadow-brand-200 shrink-0"
                     >
                         <Plus size={20} /> Add New Listing
                     </button>

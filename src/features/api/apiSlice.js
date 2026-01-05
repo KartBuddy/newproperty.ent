@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = import.meta.url.VITE_BASE_URL;
+const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8000/api";
+const IMAGE_BASE_URL = API_URL.replace("/api", "");
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
+    baseUrl: API_URL,
     prepareHeaders: (headers) => {
       // Optional: add any headers if needed
       return headers;
@@ -41,7 +42,7 @@ export const apiSlice = createApi({
             area: `${p.area_sqft} sq ft`,
             image:
               p.images && p.images.length > 0
-                ? `${BASE_URL}/${p.images[0]}`
+                ? `${IMAGE_BASE_URL}/${p.images[0]}`
                 : "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
             price_raw: p.price,
             formattedPrice: new Intl.NumberFormat("en-IN", {
@@ -83,11 +84,11 @@ export const apiSlice = createApi({
           area: `${p.area_sqft} sq ft`,
           image:
             p.images && p.images.length > 0
-              ? `${BASE_URL}/${p.images[0]}`
-              : "https://images.unsplash.com/photo-16134`90493576-7fde63acd811?w=1200",
+              ? `${IMAGE_BASE_URL}/${p.images[0]}`
+              : "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
           images:
             p.images && p.images.length > 0
-              ? p.images.map((img) => `${BASE_URL}/${img}`)
+              ? p.images.map((img) => `${IMAGE_BASE_URL}/${img}`)
               : [],
           price_raw: p.price,
           formattedPrice: new Intl.NumberFormat("en-IN", {
