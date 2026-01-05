@@ -1,4 +1,13 @@
-import { Search, MapPin, Bed, Bath, Square, ArrowRight, SlidersHorizontal, Heart } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  ArrowRight,
+  SlidersHorizontal,
+  Heart,
+} from "lucide-react";
 
 const PropertiesSection = ({
   activeSection,
@@ -18,17 +27,22 @@ const PropertiesSection = ({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-5xl font-extrabold text-brand-900 tracking-tight mb-4">
-              Explore Our <span className="text-brand-500">Premium</span> Collections
+              Explore Our <span className="text-brand-500">Premium</span>{" "}
+              Collections
             </h2>
             <p className="text-slate-600 font-medium text-lg">
-              Browse through a curated selection of residential and commercial properties verified by our experts.
+              Browse through a curated selection of residential and commercial
+              properties verified by our experts.
             </p>
           </div>
-
-          <button className="hidden md:flex items-center gap-2 text-brand-600 font-bold hover:text-brand-700 transition-colors">
-            View All Listings
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          {/* <div className="flex gap-4">
+            <button
+              onClick={() => navigate("/admin/properties/add")}
+              className="bg-brand-600 text-white px-6 py-3 rounded-xl font-black text-sm hover:bg-brand-700 transition-all active:scale-95 shadow-lg"
+            >
+              + Add Property
+            </button>
+          </div> */}
         </div>
 
         {/* Filter & Search Bar */}
@@ -39,15 +53,16 @@ const PropertiesSection = ({
               {[
                 { id: "all", label: "All Properties" },
                 { id: "sale", label: "Buy a Home" },
-                { id: "rent", label: "Rentals" }
+                { id: "rent", label: "Rentals" },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setFilterType(tab.id)}
-                  className={`flex-1 px-6 py-4 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all duration-300 relative overflow-hidden ${filterType === tab.id
-                    ? "bg-white text-brand-900 shadow-xl shadow-brand-900/5 ring-1 ring-slate-100 scale-[1.02]"
-                    : "text-slate-400 hover:text-brand-600"
-                    }`}
+                  className={`flex-1 px-6 py-4 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all duration-300 relative overflow-hidden ${
+                    filterType === tab.id
+                      ? "bg-white text-brand-900 shadow-xl shadow-brand-900/5 ring-1 ring-slate-100 scale-[1.02]"
+                      : "text-slate-400 hover:text-brand-600"
+                  }`}
                 >
                   {tab.label}
                 </button>
@@ -70,10 +85,18 @@ const PropertiesSection = ({
             </div>
 
             {/* Filter Toggle */}
-            <button className="hidden lg:flex items-center gap-2 bg-brand-900 text-white px-8 py-5 rounded-[1.8rem] font-black uppercase tracking-widest hover:bg-brand-800 transition-all active:scale-95 shadow-xl shadow-brand-900/10 text-xs">
-              <SlidersHorizontal className="w-4 h-4" />
-              Extended Filters
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="hidden lg:flex items-center gap-2 bg-brand-900 text-white px-8 py-5 rounded-[1.8rem] font-black uppercase tracking-widest hover:bg-brand-800 transition-all active:scale-95 shadow-xl shadow-brand-900/10 text-xs">
+                <SlidersHorizontal className="w-4 h-4" />
+                Extended Filters
+              </button>
+              <button
+                onClick={() => navigate("/admin/properties/add")}
+                className="hidden lg:flex items-center gap-2 bg-brand-900 text-white px-8 py-5 rounded-[1.8rem] font-black uppercase tracking-widest hover:bg-brand-800 transition-all active:scale-95 shadow-xl shadow-brand-900/10 text-xs"
+              >
+                + Add Property
+              </button>
+            </div>
           </div>
         </div>
 
@@ -91,8 +114,13 @@ const PropertiesSection = ({
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute top-4 left-4">
-                  <span className={`px-4 py-1.5 rounded-full text-white text-[10px] uppercase font-black tracking-widest ${property.type === "sale" ? "bg-emerald-500" : "bg-indigo-500"
-                    }`}>
+                  <span
+                    className={`px-4 py-1.5 rounded-full text-white text-[10px] uppercase font-black tracking-widest ${
+                      property.type === "sale"
+                        ? "bg-emerald-500"
+                        : "bg-indigo-500"
+                    }`}
+                  >
                     For {property.type}
                   </span>
                 </div>
@@ -112,8 +140,16 @@ const PropertiesSection = ({
                     {property.title}
                   </h3>
                   <div className="flex items-center gap-1 bg-rose-50 px-2 py-1 rounded-full">
-                    <Heart className={`w-3 h-3 ${property.isLiked ? "text-rose-500 fill-rose-500" : "text-rose-500"}`} />
-                    <span className="text-[10px] font-black text-rose-600">{property.likes || 0}</span>
+                    <Heart
+                      className={`w-3 h-3 ${
+                        property.isLiked
+                          ? "text-rose-500 fill-rose-500"
+                          : "text-rose-500"
+                      }`}
+                    />
+                    <span className="text-[10px] font-black text-rose-600">
+                      {property.likes || 0}
+                    </span>
                   </div>
                 </div>
 
@@ -126,24 +162,31 @@ const PropertiesSection = ({
                   {property.bedrooms > 0 && (
                     <div className="flex flex-col items-center gap-1">
                       <Bed className="w-5 h-5 text-slate-400 group-hover:text-brand-500 transition-colors" />
-                      <span className="text-[10px] font-black text-slate-800 uppercase leading-none mt-1">{property.bedrooms} Beds</span>
+                      <span className="text-[10px] font-black text-slate-800 uppercase leading-none mt-1">
+                        {property.bedrooms} Beds
+                      </span>
                     </div>
                   )}
                   <div className="flex flex-col items-center gap-1">
                     <Bath className="w-5 h-5 text-slate-400 group-hover:text-brand-500 transition-colors" />
-                    <span className="text-[10px] font-black text-slate-800 uppercase leading-none mt-1">{property.bathrooms} Baths</span>
+                    <span className="text-[10px] font-black text-slate-800 uppercase leading-none mt-1">
+                      {property.bathrooms} Baths
+                    </span>
                   </div>
                   <div className="flex flex-col items-center gap-1">
                     <Square className="w-5 h-5 text-slate-400 group-hover:text-brand-500 transition-colors" />
                     <span className="text-[10px] font-black text-slate-800 uppercase leading-none mt-1 truncate max-w-full">
-                      {property.area.split(' ')[0]} <span className="text-[8px]">SQFT</span>
+                      {property.area.split(" ")[0]}{" "}
+                      <span className="text-[8px]">SQFT</span>
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-slate-400 font-bold uppercase block mb-1">Price</span>
+                    <span className="text-xs text-slate-400 font-bold uppercase block mb-1">
+                      Price
+                    </span>
                     <span className="text-2xl font-black text-brand-600">
                       {property.formattedPrice}
                     </span>

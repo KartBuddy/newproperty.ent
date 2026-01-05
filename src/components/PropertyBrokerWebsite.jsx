@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useGetPropertiesQuery } from "../features/api/apiSlice";
-import { Building2, Facebook, Twitter, Instagram, Linkedin, ArrowUp } from "lucide-react";
+import {
+  Building2,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  ArrowUp,
+} from "lucide-react";
 import { data, useNavigate } from "react-router-dom";
 import Navbar from "./NavBar";
 import Hero from "./Hero";
@@ -8,6 +15,7 @@ import PropertiesSection from "./PropertiesSection";
 import AboutSection from "./AboutSection";
 import ContactSection from "./ContactSection";
 import AddPropertyForm from "./AddPropertyForm";
+import Hero1 from "./Hero1";
 
 const PropertyBrokerWebsite = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,16 +25,22 @@ const PropertyBrokerWebsite = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const navigate = useNavigate();
 
-  const { data: properties = [], isLoading, isError, refetch } = useGetPropertiesQuery();
+  const {
+    data: properties = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useGetPropertiesQuery();
   console.log(properties);
 
   const filteredProperties = properties.filter((property) => {
     const matchesSearch =
-      (property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        property.city?.toLowerCase().includes(searchTerm.toLowerCase()));
+      property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      property.city?.toLowerCase().includes(searchTerm.toLowerCase());
 
     // Mapping backend property_type/status to frontend filterType
-    const matchesFilter = filterType === "all" ||
+    const matchesFilter =
+      filterType === "all" ||
       (filterType === "sale" && property.status === "available") || // Temporary mapping
       (filterType === "rent" && property.status === "rented"); // Need to clarify this mapping
 
@@ -56,12 +70,13 @@ const PropertyBrokerWebsite = () => {
       />
 
       <main>
-        <Hero
+        {/* <Hero
           activeSection={activeSection}
           handleNavClick={handleNavClick}
           setShowAddForm={setShowAddForm}
           propertyList={properties}
-        />
+        /> */}
+        <Hero1 />
 
         <PropertiesSection
           {...{
@@ -80,11 +95,7 @@ const PropertyBrokerWebsite = () => {
         <ContactSection activeSection={activeSection} />
       </main>
 
-      {showAddForm && (
-        <AddPropertyForm
-          onClose={() => setShowAddForm(false)}
-        />
-      )}
+      {showAddForm && <AddPropertyForm onClose={() => setShowAddForm(false)} />}
 
       {/* Footer */}
       <footer className="bg-brand-900 text-white pt-24 pb-12">
@@ -96,15 +107,22 @@ const PropertyBrokerWebsite = () => {
                   <Building2 className="w-6 h-6" />
                 </div>
                 <span className="text-2xl font-black tracking-tight">
-                  New Property <span className="text-brand-400">Enterprises</span>
+                  New Property{" "}
+                  <span className="text-brand-400">Enterprises</span>
                 </span>
               </div>
               <p className="text-brand-200 font-medium leading-relaxed">
-                The most trusted platform for premium real estate. We connect you with verified spaces that match your lifestyle and professional needs.
+                The most trusted platform for premium real estate. We connect
+                you with verified spaces that match your lifestyle and
+                professional needs.
               </p>
               <div className="flex items-center gap-4">
                 {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                  <a key={i} href="#" className="w-10 h-10 bg-brand-800 rounded-xl flex items-center justify-center hover:bg-brand-500 transition-colors">
+                  <a
+                    key={i}
+                    href="#"
+                    className="w-10 h-10 bg-brand-800 rounded-xl flex items-center justify-center hover:bg-brand-500 transition-colors"
+                  >
                     <Icon className="w-5 h-5" />
                   </a>
                 ))}
@@ -114,26 +132,73 @@ const PropertyBrokerWebsite = () => {
             <div>
               <h4 className="text-lg font-bold mb-8">Platform</h4>
               <ul className="space-y-4 text-brand-200 font-medium">
-                <li><button onClick={() => handleNavClick('home')} className="hover:text-white transition-colors">Home</button></li>
-                <li><button onClick={() => handleNavClick('properties')} className="hover:text-white transition-colors">Browse Properties</button></li>
-                <li><button onClick={() => handleNavClick('about')} className="hover:text-white transition-colors">Features</button></li>
-                <li><button onClick={() => handleNavClick('contact')} className="hover:text-white transition-colors">Contact Support</button></li>
+                <li>
+                  <button
+                    onClick={() => handleNavClick("home")}
+                    className="hover:text-white transition-colors"
+                  >
+                    Home
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleNavClick("properties")}
+                    className="hover:text-white transition-colors"
+                  >
+                    Browse Properties
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleNavClick("about")}
+                    className="hover:text-white transition-colors"
+                  >
+                    Features
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleNavClick("contact")}
+                    className="hover:text-white transition-colors"
+                  >
+                    Contact Support
+                  </button>
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-lg font-bold mb-8">Company</h4>
               <ul className="space-y-4 text-brand-200 font-medium">
-                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Our Team</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Our Team
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Terms of Service
+                  </a>
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-lg font-bold mb-8">Newsletter</h4>
-              <p className="text-brand-200 font-medium mb-6">Stay updated with the latest premium listings and market insights.</p>
+              <p className="text-brand-200 font-medium mb-6">
+                Stay updated with the latest premium listings and market
+                insights.
+              </p>
               <div className="flex flex-col gap-3">
                 <input
                   type="email"
@@ -152,7 +217,7 @@ const PropertyBrokerWebsite = () => {
               © 2025 KartBuddy Enterprises. Built for the modern market.
             </p>
             <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="group flex items-center gap-2 text-brand-400 hover:text-white transition-colors font-bold text-sm"
             >
               Back to Top
