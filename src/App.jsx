@@ -8,10 +8,11 @@ import EditPropertyPage from "./admin-dashboard/EditPropertyPage";
 import Settings from "./admin-dashboard/Settings";
 import ContactMessages from "./admin-dashboard/ContactMessages";
 import ContactDetailView from "./admin-dashboard/ContactDetailView";
+import PropertyInquiries from "./admin-dashboard/PropertyInquiries";
+import InquiryDetailView from "./admin-dashboard/InquiryDetailView";
 import Login from "./admin-dashboard/Login";
 import PropertyBrokerWebsite from "./components/PropertyBrokerWebsite";
 import PropertyDetails from "./components/PropertyDetails";
-
 
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "./features/auth/authSlice";
@@ -24,15 +25,11 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <Routes>
-      {/* Public Routes */}
-
       <Route path="/" element={<PropertyBrokerWebsite />} />
       <Route path="/property/:id" element={<PropertyDetails />} />
 
-      {/* Admin Login */}
       <Route path="/admin/login" element={<Login />} />
 
-      {/* Admin Dashboard Routes (Protected) */}
       <Route
         path="/admin"
         element={
@@ -47,11 +44,12 @@ function App() {
         <Route path="properties/add" element={<AddPropertyPage />} />
         <Route path="properties/edit/:id" element={<EditPropertyPage />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="inquiries" element={<PropertyInquiries />} />
+        <Route path="inquiries/:id" element={<InquiryDetailView />} />
         <Route path="messages" element={<ContactMessages />} />
         <Route path="messages/:id" element={<ContactDetailView />} />
       </Route>
 
-      {/* Catch-all Redirect */}
       <Route path="/dashboard" element={<Navigate to="/admin/overview" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

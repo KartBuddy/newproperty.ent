@@ -109,6 +109,28 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Inquiries"],
     }),
+    getInquiries: builder.query({
+      query: () => "/inquiries",
+      providesTags: ["Inquiries"],
+      transformResponse: (response) => response.inquiries || [],
+    }),
+    getInquiryById: builder.query({
+      query: (id) => `/inquiries/${id}`,
+      providesTags: (result, error, id) => [{ type: "Inquiries", id }],
+      transformResponse: (response) => response.inquiry,
+    }),
+    getInquiriesByProperty: builder.query({
+      query: (propertyId) => `/inquiries/property/${propertyId}`,
+      providesTags: ["Inquiries"],
+      transformResponse: (response) => response.inquiries || [],
+    }),
+    deleteInquiry: builder.mutation({
+      query: (id) => ({
+        url: `/inquiries/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Inquiries"],
+    }),
     deleteProperty: builder.mutation({
       query: (id) => ({
         url: `/properties/${id}`,
@@ -211,6 +233,10 @@ export const {
   useAddPropertyMutation,
   useGetPropertyByIdQuery,
   useAddInquiryMutation,
+  useGetInquiriesQuery,
+  useGetInquiryByIdQuery,
+  useGetInquiriesByPropertyQuery,
+  useDeleteInquiryMutation,
   useDeletePropertyMutation,
   useUpdatePropertyMutation,
   useToggleLikeMutation,

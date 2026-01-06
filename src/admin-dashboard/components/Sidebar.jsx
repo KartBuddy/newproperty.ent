@@ -10,7 +10,8 @@ import {
     Home,
     Building2,
     User,
-    Mail
+    Mail,
+    MessageCircle,
 } from "lucide-react";
 
 const SidebarItem = ({ icon: Icon, label, path, shortcut, collapsed, setIsMobileMenuOpen }) => (
@@ -62,7 +63,7 @@ const Sidebar = ({ collapsed, isMobileMenuOpen, setIsMobileMenuOpen }) => {
                         </div>
                         {(!collapsed || isMobileMenuOpen) && (
                             <div className="flex-1 overflow-hidden">
-                                <span className="text-sm font-extrabold text-brand-900 truncate block tracking-tight">KartBuddy</span>
+                                <span className="text-sm font-extrabold text-brand-900 truncate block tracking-tight">New Property</span>
                                 <p className="text-[10px] font-bold text-brand-500 uppercase tracking-widest mt-0.5">Admin Panel</p>
                             </div>
                         )}
@@ -73,7 +74,15 @@ const Sidebar = ({ collapsed, isMobileMenuOpen, setIsMobileMenuOpen }) => {
                 <div className="flex-1 overflow-y-auto px-4 space-y-1.5 scrollbar-hide mt-2">
                     <SidebarItem icon={Home} label="Overview" path="/admin/overview" shortcut="1" collapsed={collapsed} setIsMobileMenuOpen={setIsMobileMenuOpen} />
                     <SidebarItem icon={Building2} label="Properties" path="/admin/properties" shortcut="2" collapsed={collapsed} setIsMobileMenuOpen={setIsMobileMenuOpen} />
-                    <SidebarItem icon={Mail} label="Contact Submissions" path="/admin/messages" shortcut="3" collapsed={collapsed} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+                    <SidebarItem
+                        icon={MessageCircle}
+                        label="Property Inquiries"
+                        path="/admin/inquiries"
+                        shortcut="3"
+                        collapsed={collapsed}
+                        setIsMobileMenuOpen={setIsMobileMenuOpen}
+                    />
+                    <SidebarItem icon={Mail} label="Contact Submissions" path="/admin/messages" shortcut="4" collapsed={collapsed} setIsMobileMenuOpen={setIsMobileMenuOpen} />
                 </div>
 
                 {/* Bottom Nav */}
