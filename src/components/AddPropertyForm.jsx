@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useAddPropertyMutation, useUpdatePropertyMutation } from "../features/api/apiSlice";
+import {
+  useAddPropertyMutation,
+  useUpdatePropertyMutation,
+  useSubmitPropertyRequestMutation,
+} from "../features/api/apiSlice";
 import { useNavigate } from "react-router-dom";
 
-const AddPropertyForm = ({ onClose, property, isPage }) => {
+const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
   const navigate = useNavigate();
   const [addProperty, { isLoading: isAdding }] = useAddPropertyMutation();
   const [updateProperty, { isLoading: isUpdating }] = useUpdatePropertyMutation();
+  const [submitPropertyRequest] = useSubmitPropertyRequestMutation();
+
 
   const isLoading = isAdding || isUpdating;
 
@@ -79,11 +85,16 @@ const AddPropertyForm = ({ onClose, property, isPage }) => {
         await updateProperty({ id: property.id, formData }).unwrap();
         alert("Property Updated Successfully!");
       } else {
-        await addProperty(formData).unwrap();
-        alert("Property Added Successfully!");
+        if (mode === "client") {
+          await submitPropertyRequest(formData).unwrap();
+          alert("Your property has been submitted for approval.");
+        } else {
+          await addProperty(formData).unwrap();
+          alert("Property Added Successfully!");
+        }
       }
 
-      if (isPage) {
+      if (isPage && mode === "admin") {
         navigate("/admin/properties");
       } else if (onClose) {
         onClose();

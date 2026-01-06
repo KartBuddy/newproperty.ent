@@ -64,6 +64,43 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Properties"],
     }),
+    getAdminProperties: builder.query({
+      query: (params) => ({
+        url: "/properties/admin",
+        params,
+      }),
+       providesTags: ["Properties"],
+      transformResponse: (response) => {
+        const properties = response.properties || [];
+        return properties.map((p) => {
+          // Identify if current visitor has liked this property via LocalStorage
+          const likedInStorage = JSON.parse(
+            localStorage.getItem("kartbuddy_liked_status") || "{}"
+          );
+          const isLiked = !!likedInStorage[p.id];
+
+          return {
+            ...p,
+            _id: p.id,
+            location: `${p.city}, ${p.state}`,
+            type: p.status === "rented" ? "rent" : "sale",
+            area: `${p.area_sqft} sq ft`,
+            image:
+              p.images && p.images.length > 0
+                ? `${IMAGE_BASE_URL}/${p.images[0]}`
+                : "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
+            price_raw: p.price,
+            formattedPrice: new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+              maximumFractionDigits: 0,
+            }).format(p.price),
+            likes: p.likes || 0,
+            isLiked: isLiked,
+          };
+        });
+      },
+    }),
     getPropertyById: builder.query({
       query: (id) => `/properties/${id}`,
       providesTags: (result, error, id) => [{ type: "Properties", id }],
@@ -101,6 +138,34 @@ export const apiSlice = createApi({
         };
       },
     }),
+    // CLIENT submits property (PENDING)
+    submitPropertyRequest: builder.mutation({
+      query: (formData) => ({
+        url: "/properties/request",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Properties"],
+    }),
+
+    // ADMIN fetches pending properties
+    getPendingProperties: builder.query({
+      query: () => "/properties/admin/pending",
+      providesTags: ["Properties"],
+      transformResponse: (response) => response.properties || [],
+    }),
+
+    updatePropertyApproval: builder.mutation({
+      query: ({ id, approved }) => ({
+        url: `/properties/${id}/approval`,
+        method: "PATCH",
+        body: {
+          status: approved ? "approved" : "rejected",
+        },
+      }),
+      invalidatesTags: ["Properties"],
+    }),
+
     addInquiry: builder.mutation({
       query: (inquiry) => ({
         url: "/inquiries/create",
@@ -231,7 +296,11 @@ export const {
   useGetPropertiesQuery,
   useGetDashboardStatsQuery,
   useAddPropertyMutation,
+  useGetAdminPropertiesQuery,
   useGetPropertyByIdQuery,
+  useSubmitPropertyRequestMutation,
+  useGetPendingPropertiesQuery,
+  useUpdatePropertyApprovalMutation,
   useAddInquiryMutation,
   useGetInquiriesQuery,
   useGetInquiryByIdQuery,

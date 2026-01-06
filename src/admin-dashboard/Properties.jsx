@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { useGetPropertiesQuery, useDeletePropertyMutation } from "../features/api/apiSlice";
-import { Plus, Search, Filter, Home, MapPin, Bath, Bed, Square, MoreVertical, Trash2, Edit, Building2, Heart } from "lucide-react";
+import { useGetAdminPropertiesQuery, useDeletePropertyMutation, useGetPropertyByIdQuery, useUpdatePropertyApprovalMutation } from "../features/api/apiSlice";
+import { Plus, Search, Filter, Home, MapPin, Bath, Bed, Square, MoreVertical, Trash2, Edit, Building2, Heart, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// ... (PropertyCard content stays exactly the same)
-const PropertyCard = ({ property, onEdit, onDelete }) => (
-    <div className="bg-white rounded-[32px] border border-slate-100 shadow-[0_10px_30px_rgba(15,40,84,0.03)] overflow-hidden hover:shadow-[0_20px_50px_rgba(15,40,84,0.08)] hover:-translate-y-1 transition-all duration-300 group">
+const PropertyCard = ({ property, onEdit, onDelete, onClick }) => (
+    <div onClick={onClick} className="bg-white rounded-[32px] border border-slate-100 shadow-[0_10px_30px_rgba(15,40,84,0.03)] overflow-hidden hover:shadow-[0_20px_50px_rgba(15,40,84,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
         <div className="relative h-60">
             <img src={property.image} alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute top-5 left-5 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-2xl flex items-center gap-1.5 shadow-xl shadow-brand-900/10">
@@ -14,6 +13,19 @@ const PropertyCard = ({ property, onEdit, onDelete }) => (
             </div>
             <div className="absolute top-5 right-5 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-2xl text-[11px] font-extrabold text-brand-700 shadow-xl shadow-brand-900/10 uppercase tracking-wider">
                 {property.type === 'sale' ? 'For Sale' : 'For Rent'}
+            </div>
+            <div className="absolute top-16 right-5">
+                <span
+                    className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest
+                            ${property.approval_status === "approved"
+                            ? "bg-emerald-500 text-white"
+                            : property.approval_status === "pending"
+                                ? "bg-amber-400 text-brand-900"
+                                : "bg-rose-500 text-white"
+                        }`}
+                >
+                    {property.approval_status}
+                </span>
             </div>
         </div>
         <div className="p-7">
@@ -41,13 +53,13 @@ const PropertyCard = ({ property, onEdit, onDelete }) => (
             </div>
             <div className="mt-8 flex items-center gap-3 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
                 <button
-                    onClick={() => onEdit(property.id)}
+                    onClick={(e) => { e.stopPropagation(); onEdit(property.id); }}
                     className="flex-1 py-2.5 bg-slate-50 text-[11px] font-bold text-slate-600 hover:text-brand-700 hover:bg-brand-50 rounded-xl transition-all flex items-center justify-center gap-2"
                 >
                     <Edit size={14} /> Edit
                 </button>
                 <button
-                    onClick={() => onDelete(property.id)}
+                    onClick={(e) => { e.stopPropagation(); onDelete(property.id); }}
                     className="flex-1 py-2.5 bg-slate-50 text-[11px] font-bold text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all flex items-center justify-center gap-2"
                 >
                     <Trash2 size={14} /> Delete
@@ -59,8 +71,10 @@ const PropertyCard = ({ property, onEdit, onDelete }) => (
 
 const Properties = () => {
     const navigate = useNavigate();
-    const { data: properties, isLoading, error } = useGetPropertiesQuery();
+    const { data: properties, isLoading, error } = useGetAdminPropertiesQuery();
     const [deleteProperty] = useDeletePropertyMutation();
+
+    const [selectedId, setSelectedId] = useState(null);
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -142,8 +156,12 @@ const Properties = () => {
                             property={property}
                             onEdit={handleEdit}
                             onDelete={handleDelete}
+                            onClick={() => setSelectedId(property.id)}
                         />
                     ))}
+                    {selectedId && (
+                        <PropertyModal id={selectedId} onClose={() => setSelectedId(null)} />
+                    )}
                 </div>
             )}
         </div>
@@ -151,3 +169,105 @@ const Properties = () => {
 };
 
 export default Properties;
+
+const PropertyModal = ({ id, onClose }) => {
+    const { data: property, isLoading } = useGetPropertyByIdQuery(id, { skip: !id });
+    const [updateApproval, { isLoading: isUpdating }] = useUpdatePropertyApprovalMutation();
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    if (!id) return null;
+
+    const slides = property?.images && property.images.length > 0 ? property.images : property ? [property.image] : [];
+
+    const next = (e) => { e?.stopPropagation(); setCurrentSlide((s) => (s + 1) % slides.length); };
+    const prev = (e) => { e?.stopPropagation(); setCurrentSlide((s) => (s - 1 + slides.length) % slides.length); };
+
+    const handleApproval = async (status) => {
+        try {
+            await updateApproval({ id, approved: status === "approved" }).unwrap();
+        } catch (err) {
+            console.error(err);
+        }
+        onClose();
+    };
+
+    return (
+        <div onClick={onClose} className="fixed inset-0 z-50 bg-black/50 px-4 py-8 flex items-center justify-center xl:justify-end">
+            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-6xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] xl:mr-8 md:flex">
+                {/* Left: Image / Slider */}
+                <div className="w-full md:w-1/2 h-64 md:h-auto relative flex-shrink-0">
+                    <img src={slides[currentSlide]} alt={property?.title} className="w-full h-full object-cover object-center" />
+                    <button onClick={onClose} className="absolute top-4 right-4 bg-white/90 rounded-full p-2 z-20">
+                        <X size={18} />
+                    </button>
+                    {slides.length > 1 && (
+                        <>
+                            <button onClick={prev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 rounded-full p-2 z-20">
+                                <ChevronLeft size={20} />
+                            </button>
+                            <button onClick={next} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 rounded-full p-2 z-20">
+                                <ChevronRight size={20} />
+                            </button>
+                        </>
+                    )}
+                </div>
+
+                {/* Right: Details */}
+                <div className="w-full md:w-1/2 p-6 flex flex-col justify-between max-h-[90vh] overflow-auto">
+                    <div>
+                        <div className="flex items-start justify-between">
+                            <div className="pr-4">
+                                <h3 className="text-2xl font-black text-brand-900">{property?.title}</h3>
+                                <p className="text-sm text-slate-500 mt-1">{property?.location}</p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className={`px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest
+                                    ${property?.approval_status === 'approved' ? 'bg-emerald-500 text-white' : property?.approval_status === 'pending' ? 'bg-amber-400 text-brand-900' : 'bg-rose-500 text-white'}`}>
+                                    {property?.approval_status}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="mt-4">
+                            <p className="text-sm text-slate-600 font-medium">{property?.description}</p>
+                        </div>
+
+                        <div className="mt-6 grid grid-cols-3 gap-4 border-t border-slate-50 pt-6">
+                            <div className="flex flex-col items-center gap-1.5">
+                                <Bed size={16} className="text-brand-300" />
+                                <span className="text-[11px] font-bold text-slate-600">{property?.bedrooms} Bed</span>
+                            </div>
+                            <div className="flex flex-col items-center gap-1.5 border-x border-slate-50 px-2">
+                                <Bath size={16} className="text-brand-300" />
+                                <span className="text-[11px] font-bold text-slate-600">{property?.bathrooms} Bath</span>
+                            </div>
+                            <div className="flex flex-col items-center gap-1.5">
+                                <Square size={16} className="text-brand-300" />
+                                <span className="text-[11px] font-bold text-slate-600">{property?.area}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-6">
+                        <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                            <div className="text-sm font-extrabold text-brand-700">{property?.formattedPrice}</div>
+                            <div className="text-xs text-slate-400 mt-2">Owner: {property?.owner_name || 'N/A'}</div>
+                            <div className="text-xs text-slate-400 mt-1">Contact: {property?.owner_contact || 'N/A'}</div>
+                        </div>
+
+                        <div className="sticky bottom-0 bg-white pt-4 -mx-6 px-6 pb-6">
+                            {property?.approval_status === 'pending' ? (
+                                <div className="flex gap-3">
+                                    <button onClick={() => handleApproval('approved')} className="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-extrabold hover:bg-emerald-700">Approve</button>
+                                    <button onClick={() => handleApproval('rejected')} className="flex-1 px-4 py-3 bg-rose-600 text-white rounded-xl font-extrabold hover:bg-rose-700">Reject</button>
+                                </div>
+                            ) : (
+                                <button onClick={onClose} className="w-full px-4 py-3 bg-slate-100 rounded-xl font-extrabold">Close</button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};

@@ -35,14 +35,14 @@ const PropertiesSection = ({
               properties verified by our experts.
             </p>
           </div>
-          {/* <div className="flex gap-4">
+          <div className="flex gap-4">
             <button
-              onClick={() => navigate("/admin/properties/add")}
+              onClick={() => navigate("/request-property")}
               className="bg-brand-600 text-white px-6 py-3 rounded-xl font-black text-sm hover:bg-brand-700 transition-all active:scale-95 shadow-lg"
             >
-              + Add Property
+              Request to Add Property
             </button>
-          </div> */}
+          </div>
         </div>
 
         {/* Filter & Search Bar */}
@@ -58,11 +58,10 @@ const PropertiesSection = ({
                 <button
                   key={tab.id}
                   onClick={() => setFilterType(tab.id)}
-                  className={`flex-1 px-6 py-4 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all duration-300 relative overflow-hidden ${
-                    filterType === tab.id
+                  className={`flex-1 px-6 py-4 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all duration-300 relative overflow-hidden ${filterType === tab.id
                       ? "bg-white text-brand-900 shadow-xl shadow-brand-900/5 ring-1 ring-slate-100 scale-[1.02]"
                       : "text-slate-400 hover:text-brand-600"
-                  }`}
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -115,11 +114,10 @@ const PropertiesSection = ({
                 />
                 <div className="absolute top-4 left-4">
                   <span
-                    className={`px-4 py-1.5 rounded-full text-white text-[10px] uppercase font-black tracking-widest ${
-                      property.type === "sale"
+                    className={`px-4 py-1.5 rounded-full text-white text-[10px] uppercase font-black tracking-widest ${property.type === "sale"
                         ? "bg-emerald-500"
                         : "bg-indigo-500"
-                    }`}
+                      }`}
                   >
                     For {property.type}
                   </span>
@@ -141,11 +139,10 @@ const PropertiesSection = ({
                   </h3>
                   <div className="flex items-center gap-1 bg-rose-50 px-2 py-1 rounded-full">
                     <Heart
-                      className={`w-3 h-3 ${
-                        property.isLiked
+                      className={`w-3 h-3 ${property.isLiked
                           ? "text-rose-500 fill-rose-500"
                           : "text-rose-500"
-                      }`}
+                        }`}
                     />
                     <span className="text-[10px] font-black text-rose-600">
                       {property.likes || 0}
