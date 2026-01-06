@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const API_URL = import.meta.env.VITE_BASE_URL;
-const IMAGE_BASE_URL = API_URL.replace("/api", "");
+const IMAGE_BASE_URL = import.meta.env.VITE_BASE_URL.replace(/\/api$/, "");
 
 export const apiSlice = createApi({
   reducerPath: "api",
