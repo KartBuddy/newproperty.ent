@@ -6,6 +6,29 @@ import {
 } from "../features/api/apiSlice";
 import { useNavigate } from "react-router-dom";
 
+const FURNISHING_OPTIONS = [
+  'Light',
+  'Ceiling Fan',
+  'Air Conditioner (AC)',
+  'Heater',
+  'Air Cooler',
+  'Television (TV)',
+  'Modular Kitchen',
+  'Sofa Set',
+  'Dining Table',
+  'Wardrobe',
+  'King Size Bed',
+  'Queen Size Bed',
+  'Mattress',
+  'Washing Machine',
+  'Refrigerator',
+  'Microwave / Oven',
+  'Geyser',
+  'Chimney',
+  'Curtains / Blinds',
+  'Study Table'
+];
+
 const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
   const navigate = useNavigate();
   const [addProperty, { isLoading: isAdding }] = useAddPropertyMutation();
@@ -31,6 +54,8 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
     parking: false,
     owner_name: "",
     owner_contact: "",
+    furnishing_status: "",
+    furnishings: []
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -58,9 +83,36 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setNewProperty({
-      ...newProperty,
-      [name]: type === "checkbox" ? checked : value,
+    
+    if (name === 'furnishing_status') {
+      setNewProperty({
+        ...newProperty,
+        [name]: value,
+        furnishings: value === 'furnished' ? newProperty.furnishings : []
+      });
+    } else {
+      setNewProperty({
+        ...newProperty,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    }
+  };
+
+  const handleFurnishingToggle = (furnishing) => {
+    setNewProperty(prev => {
+      const currentFurnishings = [...(prev.furnishings || [])];
+      const index = currentFurnishings.indexOf(furnishing);
+      
+      if (index === -1) {
+        currentFurnishings.push(furnishing);
+      } else {
+        currentFurnishings.splice(index, 1);
+      }
+      
+      return {
+        ...prev,
+        furnishings: currentFurnishings
+      };
     });
   };
 
@@ -151,11 +203,254 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
             className="w-full px-5 py-4 bg-slate-50 border border-slate-50 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all appearance-none"
           >
             <option value="apartment">Apartment</option>
+            <option value="flat">Flat</option>
             <option value="villa">Villa</option>
             <option value="plot">Plot</option>
-            <option value="commercial">Commercial</option>
+            
             <option value="office">Office</option>
           </select>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Property Category</label>
+          <select
+            name="property_category"
+            value={newProperty.property_category || ''}
+            onChange={handleChange}
+            className="w-full px-5 py-4 bg-slate-50 border border-slate-50 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all appearance-none"
+            required
+          >
+            <option value="">Select Category</option>
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+            <option value="industrial">Industrial</option>
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Transaction Type</label>
+          <select
+            name="transaction_type"
+            value={newProperty.transaction_type || ''}
+            onChange={handleChange}
+            className="w-full px-5 py-4 bg-slate-50 border border-slate-50 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all appearance-none"
+            required
+          >
+            <option value="">Select Type</option>
+            <option value="sale">Sale</option>
+            <option value="rent">Rent</option>
+          </select>
+        </div>
+
+        {/* Property Address Section */}
+        <div className="md:col-span-2 space-y-4 p-6 bg-slate-50 rounded-2xl">
+          <h3 className="text-lg font-bold text-brand-900">Property Address</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Flat / Office No.</label>
+              <input
+                name="flat_office_no"
+                placeholder="e.g. 1201, Office 5B"
+                value={newProperty.flat_office_no || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Wing / Block / Tower</label>
+              <input
+                name="wing_block_tower"
+                placeholder="e.g. Wing A, Block B, Tower C"
+                value={newProperty.wing_block_tower || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Floor No.</label>
+              <input
+                name="floor_no"
+                type="number"
+                placeholder="e.g. 12, G (for Ground)"
+                value={newProperty.floor_no || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Building / Society Name</label>
+              <input
+                name="building_society_name"
+                placeholder="e.g. Shanti Apartments, ABC Society"
+                value={newProperty.building_society_name || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Plot / CTS / Survey No.</label>
+              <input
+                name="plot_cts_survey_no"
+                placeholder="e.g. CTS No. 1234, Survey No. 56"
+                value={newProperty.plot_cts_survey_no || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Street & Locality Section */}
+        <div className="md:col-span-2 space-y-4 p-6 bg-slate-50 rounded-2xl">
+          <h3 className="text-lg font-bold text-brand-900">Street & Locality</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Street / Road Name</label>
+              <input
+                name="street_road_name"
+                placeholder="e.g. MG Road, Linking Road"
+                value={newProperty.street_road_name || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Landmark</label>
+              <input
+                name="landmark"
+                placeholder="e.g. Near City Mall, Opposite Bank"
+                value={newProperty.landmark || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Local Area / Sector</label>
+              <input
+                name="local_area_sector"
+                placeholder="e.g. Sector 15, Bandra West"
+                value={newProperty.local_area_sector || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Area / Locality</label>
+              <input
+                name="area_locality"
+                placeholder="e.g. Andheri East, South Delhi"
+                value={newProperty.area_locality || ''}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Administrative Details Section */}
+        <div className="md:col-span-2 space-y-4 p-6 bg-slate-50 rounded-2xl">
+          <h3 className="text-lg font-bold text-brand-900">Administrative Details</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">City</label>
+              <input
+                name="city"
+                placeholder="e.g. Mumbai, Delhi, Bangalore"
+                value={newProperty.city || ''}
+                onChange={handleChange}
+                required
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">District</label>
+              <input
+                name="district"
+                placeholder="e.g. Mumbai Suburban, South Delhi"
+                value={newProperty.district || ''}
+                onChange={handleChange}
+                required
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">State</label>
+              <input
+                name="state"
+                placeholder="e.g. Maharashtra, Delhi, Karnataka"
+                value={newProperty.state || ''}
+                onChange={handleChange}
+                required
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Pincode</label>
+              <input
+                name="pincode"
+                type="number"
+                placeholder="e.g. 400001"
+                value={newProperty.pincode || ''}
+                onChange={handleChange}
+                required
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all placeholder:text-slate-300"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Furnishing Details Section */}
+        <div className="md:col-span-2 space-y-4 p-6 bg-slate-50 rounded-2xl">
+          <h3 className="text-lg font-bold text-brand-900">Furnishing Details</h3>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Furnishing Status</label>
+              <select
+                name="furnishing_status"
+                value={newProperty.furnishing_status}
+                onChange={handleChange}
+                className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 focus:bg-white transition-all"
+              >
+                <option value="">Select Furnishing Status</option>
+                <option value="furnished">Furnished</option>
+                <option value="semi-furnished">Semi-furnished</option>
+                <option value="unfurnished">Unfurnished</option>
+              </select>
+            </div>
+
+            {newProperty.furnishing_status === 'furnished' && (
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-slate-600">Available Furnishings</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {FURNISHING_OPTIONS.map((item) => (
+                    <label key={item} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={newProperty.furnishings?.includes(item) || false}
+                        onChange={() => handleFurnishingToggle(item)}
+                        className="h-4 w-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
+                      />
+                      <span className="text-sm text-slate-700">{item}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="space-y-2">
