@@ -13,6 +13,66 @@ const FURNISHING_OPTIONS = [
   'Refrigerator', 'Microwave / Oven', 'Geyser', 'Chimney', 'Curtains / Blinds', 'Study Table'
 ];
 
+// Amenity options
+const CORE_BUILDING_FEATURES = [
+  'Lobby reception / concierge / porter service',
+  'Elevators (multiple & service lifts)',
+  'Power backup (generators/UPS)',
+  'Reliable water supply and storage systems',
+  'BMC Water supply',
+  'Covered & visitor parking',
+  'EV charging stations',
+  'Bike parking',
+  'Wi-Fi in common areas',
+  'Smart building systems'
+];
+
+const CONVENIENCE_SERVICES = [
+  'Package delivery lockers',
+  'On-site maintenance team',
+  'Waste management and recycling',
+  'Rainwater harvesting / sustainability systems',
+  'Dry-cleaning / laundry services',
+  'Retail essentials (grocery, pharmacy)'
+];
+
+const FITNESS_WELLNESS = [
+  'Gym & fitness centre',
+  'Yoga / aerobics / wellness zones',
+  'Jogging & walking tracks',
+  'Spa / sauna / steam rooms',
+  'Swimming pools (lap & leisure)'
+];
+
+const FAMILIES_RECREATION = [
+  'Children\'s play areas',
+  'Sports courts (badminton, basketball, tennis)',
+  'Clubhouse / community hall',
+  'Multipurpose rooms',
+  'Mini-theatre / entertainment rooms',
+  'Co-working / shared workspaces',
+  'Community gardens & green spaces'
+];
+
+const SOCIAL_LEISURE_SPACES = [
+  'Rooftop lounges & decks',
+  'BBQ & outdoor seating zones',
+  'Cafe / coffee spots (in luxury projects)',
+  'Party / banquet halls',
+  'Library / reading rooms'
+];
+
+const COMMERCIAL_AMENITIES = [
+  'High-speed elevators & access control',
+  'Business lounges / meeting rooms',
+  'Conference & event halls',
+  'Cafeterias / food courts',
+  'On-site retail and services',
+  'Shared co-working spaces',
+  'Multi-level parking & EV infrastructure',
+  'Central HVAC and power backup'
+];
+
 const PROPERTY_TYPES = {
   residential: ['Flat', 'Apartment', 'Villa', 'Plot'],
   commercial: ['Office', 'Shop', 'Warehouse'],
@@ -61,6 +121,12 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
     truck_access_available: false,
     furnishing_status: "",
     furnishings: [],
+    core_building_features: [],
+    convenience_services: [],
+    fitness_wellness: [],
+    families_recreation: [],
+    social_leisure_spaces: [],
+    commercial_amenities: [],
     description: "",
     owner_name: "",
     owner_contact: "",
@@ -71,6 +137,7 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [customFurnishing, setCustomFurnishing] = useState("");
   const [availablePropertyTypes, setAvailablePropertyTypes] = useState([]);
+  const [activeAmenityTab, setActiveAmenityTab] = useState('Core Building Features');
 
   useEffect(() => {
     if (property) {
@@ -108,6 +175,12 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
         truck_access_available: property.truck_access_available || false,
         furnishing_status: property.furnishing_status || "",
         furnishings: property.furnishings || [],
+        core_building_features: property.core_building_features || [],
+        convenience_services: property.convenience_services || [],
+        fitness_wellness: property.fitness_wellness || [],
+        families_recreation: property.families_recreation || [],
+        social_leisure_spaces: property.social_leisure_spaces || [],
+        commercial_amenities: property.commercial_amenities || [],
         description: property.description || "",
         owner_name: property.owner_name || "",
         owner_contact: property.owner_contact || "",
@@ -220,6 +293,71 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
   const showPlotFields = formData.property_type !== 'plot';
   const showTruckAccess = ['commercial', 'industrial'].includes(formData.property_category);
   const showFurnishing = formData.furnishing_status && formData.furnishing_status !== 'unfurnished';
+
+  const renderAmenityCheckboxes = () => {
+    let amenities = [];
+    switch (activeAmenityTab) {
+      case 'Core Building Features':
+        amenities = CORE_BUILDING_FEATURES;
+        break;
+      case 'Convenience & Services':
+        amenities = CONVENIENCE_SERVICES;
+        break;
+      case 'Fitness & Wellness':
+        amenities = FITNESS_WELLNESS;
+        break;
+      case 'Families & Recreation':
+        amenities = FAMILIES_RECREATION;
+        break;
+      case 'Social & Leisure':
+        amenities = SOCIAL_LEISURE_SPACES;
+        break;
+      case 'Commercial':
+        amenities = COMMERCIAL_AMENITIES;
+        break;
+      default:
+        amenities = [];
+    }
+
+    return amenities.map((amenity) => {
+      const isChecked = formData.amenities?.includes(amenity) || false;
+      return (
+        <label 
+          key={amenity} 
+          className={`flex items-start p-3 sm:p-4 rounded-xl transition-all duration-200 cursor-pointer ${
+            isChecked 
+              ? 'bg-brand-50 border border-brand-100' 
+              : 'bg-white border border-slate-100 hover:border-brand-100 hover:bg-brand-50/50'
+          }`}
+        >
+          <div className="flex items-center h-5 mt-0.5">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={() => handleAmenityToggle(amenity)}
+              className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 transition"
+            />
+          </div>
+          <span className="ml-3 text-sm font-medium text-slate-700">
+            {amenity}
+          </span>
+        </label>
+      );
+    });
+  };
+
+  const handleAmenityToggle = (field, item) => {
+    setFormData(prev => {
+      const amenities = [...(prev[field] || [])];
+      const index = amenities.indexOf(item);
+      if (index === -1) {
+        amenities.push(item);
+      } else {
+        amenities.splice(index, 1);
+      }
+      return { ...prev, [field]: amenities };
+    });
+  };
 
   const formContent = (
     <div className={`${isPage ? 'bg-white rounded-[40px] shadow-[0_20px_60px_rgba(15,40,84,0.05)] border border-slate-50' : 'bg-white rounded-[40px] w-full max-w-6xl overflow-y-auto max-h-[90vh] shadow-2xl border border-slate-100'} p-10 space-y-8`}>
@@ -475,9 +613,39 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
           </div>
         </section>
 
-        {/* 8. Owner & Description */}
+        {/* 8. Property Amenities - Enhanced */}
+        <section className="p-4 sm:p-6 bg-slate-50 rounded-2xl">
+          <h3 className="text-lg font-bold text-brand-900 mb-4 sm:mb-6">8. Property Amenities</h3>
+          
+          {/* Grid Tab Navigation */}
+          <div className="mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {['Core Building Features', 'Convenience & Services', 'Fitness & Wellness', 'Families & Recreation', 'Social & Leisure', 'Commercial'].map((tab) => (
+                <button
+                  key={tab}
+                  className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 text-left ${
+                    activeAmenityTab === tab
+                      ? 'bg-brand-100 text-brand-700 shadow-sm'
+                      : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                  }`}
+                  onClick={() => setActiveAmenityTab(tab)}
+                  title={tab}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Enhanced Amenities Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            {renderAmenityCheckboxes()}
+          </div>
+        </section>
+
+        {/* 9. Owner & Description */}
         <section className="p-6 bg-slate-50 rounded-2xl">
-          <h3 className="text-lg font-bold text-brand-900 mb-4">8. Owner & Description</h3>
+          <h3 className="text-lg font-bold text-brand-900 mb-4">9. Owner & Description</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="space-y-2">
               <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Owner Name*</label>
