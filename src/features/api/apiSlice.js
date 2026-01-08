@@ -1,17 +1,48 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const API_URL = import.meta.env.VITE_BASE_URL;
-const IMAGE_BASE_URL = import.meta.env.VITE_BASE_URL.replace(/\/api$/, "");
+// In development, use the proxy path
+const isDevelopment = import.meta.env.DEV;
+const API_URL = isDevelopment ? '/api' : import.meta.env.VITE_BASE_URL;
+const IMAGE_BASE_URL = isDevelopment 
+  ? 'https://api.newproperty.co.in' 
+  : import.meta.env.VITE_BASE_URL.replace(/\/api$/, '');
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     prepareHeaders: (headers) => {
-      // Optional: add any headers if needed
+      // Add CORS headers
+      headers.set('Access-Control-Allow-Origin', '*');
+      headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       return headers;
     },
-    credentials: "include",
+    credentials: 'include',
+    mode: 'cors',
+    fetchFn: async (input, init) => {
+      try {
+        const response = await fetch(input, {
+          ...init,
+          mode: 'cors',
+          headers: {
+            ...init?.headers,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          const error = new Error('An error occurred while fetching the data.');
+          error.status = response.status;
+          throw error;
+        }
+        
+        return response;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    },
   }),
   tagTypes: ["Properties", "Inquiries"],
   endpoints: (builder) => ({
