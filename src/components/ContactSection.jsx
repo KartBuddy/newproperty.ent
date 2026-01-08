@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Phone, Mail, MapPin, Send, MessageSquare, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { useSubmitContactMutation } from "../features/api/apiSlice";
+import SetPropertyFeatures from "./SetPropertyFeatures";
 
 const ContactSection = ({ activeSection }) => {
   const [formData, setFormData] = useState({
@@ -183,6 +184,8 @@ const ContactSection = ({ activeSection }) => {
                     </>
                   )}
                 </button>
+
+                <SetPropertyFeatures />
               </div>
             </form>
           </div>
