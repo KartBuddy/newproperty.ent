@@ -296,31 +296,39 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
 
   const renderAmenityCheckboxes = () => {
     let amenities = [];
+    let fieldName = '';
+    
     switch (activeAmenityTab) {
       case 'Core Building Features':
         amenities = CORE_BUILDING_FEATURES;
+        fieldName = 'core_building_features';
         break;
       case 'Convenience & Services':
         amenities = CONVENIENCE_SERVICES;
+        fieldName = 'convenience_services';
         break;
       case 'Fitness & Wellness':
         amenities = FITNESS_WELLNESS;
+        fieldName = 'fitness_wellness';
         break;
       case 'Families & Recreation':
         amenities = FAMILIES_RECREATION;
+        fieldName = 'families_recreation';
         break;
       case 'Social & Leisure':
         amenities = SOCIAL_LEISURE_SPACES;
+        fieldName = 'social_leisure_spaces';
         break;
       case 'Commercial':
         amenities = COMMERCIAL_AMENITIES;
+        fieldName = 'commercial_amenities';
         break;
       default:
         amenities = [];
     }
 
     return amenities.map((amenity) => {
-      const isChecked = formData.amenities?.includes(amenity) || false;
+      const isChecked = formData[fieldName]?.includes(amenity) || false;
       return (
         <label 
           key={amenity} 
@@ -334,7 +342,7 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
             <input
               type="checkbox"
               checked={isChecked}
-              onChange={() => handleAmenityToggle(amenity)}
+              onChange={() => handleAmenityToggle(fieldName, amenity)}
               className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 transition"
             />
           </div>
@@ -348,14 +356,14 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
 
   const handleAmenityToggle = (field, item) => {
     setFormData(prev => {
-      const amenities = [...(prev[field] || [])];
-      const index = amenities.indexOf(item);
+      const currentAmenities = [...(prev[field] || [])];
+      const index = currentAmenities.indexOf(item);
       if (index === -1) {
-        amenities.push(item);
+        currentAmenities.push(item);
       } else {
-        amenities.splice(index, 1);
+        currentAmenities.splice(index, 1);
       }
-      return { ...prev, [field]: amenities };
+      return { ...prev, [field]: currentAmenities };
     });
   };
 
