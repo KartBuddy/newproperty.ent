@@ -24,7 +24,7 @@ const DashboardLayout = () => {
                     setCollapsed={setCollapsed}
                     setIsMobileMenuOpen={setIsMobileMenuOpen}
                 />
-                <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 md:p-4 lg:p-5">
                     <div className="max-w-7xl mx-auto h-full">
                         <Outlet />
                     </div>

@@ -44,13 +44,13 @@ const Sidebar = ({ collapsed, isMobileMenuOpen, setIsMobileMenuOpen }) => {
             {/* Mobile Overlay */}
             {isMobileMenuOpen && (
                 <div
-                    className="fixed inset-0 bg-brand-900/40 backdrop-blur-sm z-[70] lg:hidden animate-in fade-in duration-300"
+                    className="fixed inset-0 bg-brand-900/40 backdrop-blur-sm z-[40] lg:hidden animate-in fade-in duration-300"
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}
 
             <div
-                className={`h-screen bg-white border-r border-slate-100 transition-all duration-300 flex flex-col fixed lg:relative z-[80] lg:z-[60] ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+                className={`h-screen bg-white border-r border-slate-100 transition-all duration-300 flex flex-col fixed lg:relative z-[30] lg:z-[30] ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                     } ${collapsed ? "lg:w-[80px]" : "lg:w-[280px] w-[280px]"} shadow-[1px_0_20px_rgba(15,40,84,0.03)]`}
             >
                 {/* Sidebar Top: Logo/Brand */}
