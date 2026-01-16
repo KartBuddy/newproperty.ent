@@ -40,9 +40,12 @@ const Navbar = ({
             <div className="p-2 bg-brand-900 rounded-lg text-white group-hover:bg-brand-800 transition-colors">
               <Building2 className="w-6 h-6" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-brand-900">
-              New Property <span className="text-brand-500">Enterprises</span>
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold tracking-tight text-brand-900">
+                New Property <span className="text-brand-500">Enterprises</span>
+              </span>
+              <span className="text-xs text-brand-600">MAHARERA: A031242502948</span>
+            </div>
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
