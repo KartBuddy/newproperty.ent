@@ -97,7 +97,6 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
     security_deposit: "",
     area_sqft: "",
     usable_carpet_area: "",
-    rera_carpet_area: "",
     bedrooms: "",
     bathrooms: "",
     kitchens: "",
@@ -113,7 +112,6 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
     landmark: "",
     local_area_sector: "",
     area_locality: "",
-    address: "",
     city: "",
     district: "",
     state: "",
@@ -151,7 +149,6 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
         security_deposit: property.security_deposit || "",
         area_sqft: property.area_sqft || "",
         usable_carpet_area: property.usable_carpet_area || "",
-        rera_carpet_area: property.rera_carpet_area || "",
         bedrooms: property.bedrooms || "",
         bathrooms: property.bathrooms || "",
         kitchens: property.kitchens || "",
@@ -167,7 +164,6 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
         landmark: property.landmark || "",
         local_area_sector: property.local_area_sector || "",
         area_locality: property.area_locality || "",
-        address: property.address || "",
         city: property.city || "",
         district: property.district || "",
         state: property.state || "",
@@ -516,10 +512,6 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
               <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Pincode*</label>
               <input name="pincode" value={formData.pincode} onChange={handleChange} required maxLength="6" placeholder="400001" className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 transition-all placeholder:text-slate-300" />
             </div>
-            <div className="md:col-span-2 space-y-2">
-              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Complete Address*</label>
-              <input name="address" value={formData.address} onChange={handleChange} required placeholder="Full address with landmark" className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-medium text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 transition-all placeholder:text-slate-300" />
-            </div>
           </div>
         </section>
 
@@ -534,10 +526,6 @@ const AddPropertyForm = ({ onClose, property, isPage, mode = "admin" }) => {
             <div className="space-y-2">
               <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">Usable Carpet Area (sq ft)</label>
               <input type="number" name="usable_carpet_area" value={formData.usable_carpet_area} onChange={handleChange} placeholder="1000" className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-bold text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 transition-all placeholder:text-slate-300" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[11px] font-extrabold text-brand-400 uppercase tracking-widest ml-1">RERA Carpet Area (sq ft)</label>
-              <input type="number" name="rera_carpet_area" value={formData.rera_carpet_area} onChange={handleChange} placeholder="950" className="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl text-sm font-bold text-brand-900 outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-200 transition-all placeholder:text-slate-300" />
             </div>
             {formData.property_category === 'residential' && (
               <>

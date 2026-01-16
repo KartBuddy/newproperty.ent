@@ -4,9 +4,9 @@ import { Plus, Search, Filter, Home, MapPin, Bath, Bed, Square, MoreVertical, Tr
 import { useNavigate } from "react-router-dom";
 
 const PropertyCard = ({ property, onEdit, onDelete, onClick }) => (
-    <div onClick={onClick} className="bg-white rounded-[32px] border border-slate-100 shadow-[0_10px_30px_rgba(15,40,84,0.03)] overflow-hidden hover:shadow-[0_20px_50px_rgba(15,40,84,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
+    <div onClick={onClick} className="bg-white rounded-[32px] border border-slate-100 shadow-[0_10px_30px_rgba(15,40,84,0.03)] overflow-hidden cursor-pointer">
         <div className="relative h-60">
-            <img src={property.image} alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img src={property.image} alt={property.title} className="w-full h-full object-cover" />
             <div className="absolute top-5 left-5 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-2xl flex items-center gap-1.5 shadow-xl shadow-brand-900/10">
                 <Heart size={14} className="text-rose-500 fill-rose-500" />
                 <span className="text-[11px] font-extrabold text-brand-700">{property.likes || 0}</span>
@@ -51,7 +51,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onClick }) => (
                     <span className="text-[11px] font-bold text-slate-600 truncate">{property.area}</span>
                 </div>
             </div>
-            <div className="mt-8 flex items-center gap-3 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+            <div className="mt-8 flex items-center gap-3">
                 <button
                     onClick={(e) => { e.stopPropagation(); onEdit(property.id); }}
                     className="flex-1 py-2.5 bg-slate-50 text-[11px] font-bold text-slate-600 hover:text-brand-700 hover:bg-brand-50 rounded-xl transition-all flex items-center justify-center gap-2"
@@ -98,12 +98,12 @@ const Properties = () => {
     };
 
     return (
-        <div className="flex flex-col gap-10 pb-12">
+        <div className="flex flex-col gap-6">
             {/* Search and Filters Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-extrabold text-brand-900 tracking-tight">Manage Properties</h2>
-                    <p className="text-sm font-bold text-brand-400 mt-1 uppercase tracking-widest">Browse and update your listings</p>
+                    <h2 className="text-2xl font-extrabold text-brand-900 tracking-tight">Manage Properties</h2>
+                    <p className="text-xs font-bold text-brand-400 mt-0.5 uppercase tracking-widest">Browse and update your listings</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     <div className="relative group min-w-[300px]">
@@ -149,8 +149,8 @@ const Properties = () => {
                     <button onClick={() => window.location.reload()} className="px-6 py-3 bg-brand-50 text-brand-700 rounded-2xl text-xs font-extrabold hover:bg-brand-100 transition-all">Retry Connection</button>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 lg:gap-10">
-                    {filteredProperties?.map(property => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredProperties?.map((property) => (
                         <PropertyCard
                             key={property.id}
                             property={property}
@@ -159,10 +159,10 @@ const Properties = () => {
                             onClick={() => setSelectedId(property.id)}
                         />
                     ))}
-                    {selectedId && (
-                        <PropertyModal id={selectedId} onClose={() => setSelectedId(null)} />
-                    )}
                 </div>
+            )}
+            {selectedId && (
+                <PropertyModal id={selectedId} onClose={() => setSelectedId(null)} />
             )}
         </div>
     );
