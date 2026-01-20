@@ -94,7 +94,7 @@ const PropertyDetails = () => {
             <div className="relative group rounded-[2.5rem] overflow-hidden bg-slate-900 shadow-2xl aspect-[16/9]">
               <img
                 src={slides[currentSlide]}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="w-full h-full object-cover"
                 alt={`Property slide ${currentSlide}`}
               />
 
@@ -203,7 +203,7 @@ const PropertyDetails = () => {
                       <div className="relative h-64 overflow-hidden">
                         <img
                           src={p.image}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          className="w-full h-full object-cover"
                           alt={p.title}
                         />
                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black uppercase text-brand-900 border border-white/20">
@@ -230,20 +230,20 @@ const PropertyDetails = () => {
               <h3 className="text-2xl font-black mb-6 relative z-10">Get in Touch</h3>
 
               <div className="flex items-center gap-4 mb-8 p-4 bg-brand-800 rounded-[1.5rem] border border-brand-700 relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-brand-700 flex items-center justify-center border border-brand-600 font-black text-brand-300 uppercase">
-                  {(property.owner_name || "KB").substring(0, 2)}
+                <div className="w-14 h-14 rounded-2xl bg-brand-700 flex items-center justify-center border border-brand-600">
+                  <Home className="w-6 h-6 text-brand-200" />
                 </div>
                 <div>
-                  <p className="font-black text-lg">{property.owner_name || "KartBuddy Advisor"}</p>
-                  <p className="text-brand-400 text-xs font-bold uppercase tracking-widest">Property Owner / Agent</p>
+                  <p className="font-black text-lg">Interested in this Property</p>
+                  <p className="text-brand-400 text-sm font-bold">call me/Whatsapp</p>
                 </div>
               </div>
 
               <div className="space-y-4 mb-8 relative z-10">
-                <a href={`tel:${property.owner_contact || ""}`} className="w-full bg-brand-500 text-white py-4 rounded-[1.25rem] font-black hover:bg-brand-400 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand-500/20 active:scale-95 text-center">
-                  <Phone className="w-5 h-5 text-brand-200" /> {property.owner_contact || "Call Support"}
+                <a href="tel:9223376243" className="w-full bg-brand-500 text-white py-4 rounded-[1.25rem] font-black hover:bg-brand-400 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand-500/20 active:scale-95 text-center">
+                  <Phone className="w-5 h-5 text-brand-200" /> 9223376243
                 </a>
-                <a href={`https://wa.me/${property.owner_contact || ""}`} target="_blank" rel="noopener noreferrer" className="w-full bg-brand-800 text-white py-4 rounded-[1.25rem] font-black hover:bg-brand-700 transition-all flex items-center justify-center gap-3 border border-brand-700 active:scale-95 text-center">
+                <a href="https://wa.me/919223376243" target="_blank" rel="noopener noreferrer" className="w-full bg-brand-800 text-white py-4 rounded-[1.25rem] font-black hover:bg-brand-700 transition-all flex items-center justify-center gap-3 border border-brand-700 active:scale-95 text-center">
                   <MessageSquare className="w-5 h-5 text-brand-400" /> WhatsApp
                 </a>
               </div>

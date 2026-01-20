@@ -195,8 +195,13 @@ const PropertyModal = ({ id, onClose }) => {
         <div onClick={onClose} className="fixed inset-0 z-50 bg-black/50 px-4 py-8 flex items-center justify-center xl:justify-end">
             <div onClick={(e) => e.stopPropagation()} className="w-full max-w-6xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] xl:mr-8 md:flex">
                 {/* Left: Image / Slider */}
-                <div className="w-full md:w-1/2 h-64 md:h-auto relative flex-shrink-0">
-                    <img src={slides[currentSlide]} alt={property?.title} className="w-full h-full object-cover object-center" />
+                <div className="w-full md:w-1/2 h-64 md:h-auto relative flex-shrink-0 overflow-auto flex items-center justify-center bg-gray-100">
+                    <img 
+                        src={slides[currentSlide]} 
+                        alt={property?.title} 
+                        className="max-w-full max-h-full object-contain" 
+                        style={{ maxHeight: '90vh' }}
+                    />
                     <button onClick={onClose} className="absolute top-4 right-4 bg-white/90 rounded-full p-2 z-20">
                         <X size={18} />
                     </button>
