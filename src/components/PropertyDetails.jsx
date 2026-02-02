@@ -173,8 +173,7 @@ const PropertyDetails = () => {
                     `Pincode: ${property.pincode}`,
                     `Owner: ${property.owner_name || "Confidential"}`,
                     `Parking: ${property.parking ? "Dedicated Spot" : "Not Available"}`,
-                    `Status: ${property.status}`,
-                    `Property ID: #KB-${property.id}`
+                    `Status: ${property.status}`
                   ].map((highlight, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5 text-emerald-500" />
@@ -182,43 +181,6 @@ const PropertyDetails = () => {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-3xl font-black text-slate-900 mb-8 flex items-center gap-3">
-                <span className="w-2 h-8 bg-brand-200 rounded-full"></span>
-                Curated Recommendations
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-4">
-                {allProperties
-                  .filter((p) => p.id !== property.id)
-                  .slice(0, 4)
-                  .map((p) => (
-                    <div
-                      key={p.id}
-                      className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer"
-                      onClick={() => navigate(`/property/${p.id}`)}
-                    >
-                      <div className="relative h-64 overflow-hidden">
-                        <img
-                          src={p.image}
-                          className="w-full h-full object-cover"
-                          alt={p.title}
-                        />
-                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black uppercase text-brand-900 border border-white/20">
-                          {p.type}
-                        </div>
-                      </div>
-                      <div className="p-6">
-                        <h4 className="font-extrabold text-slate-900 text-lg mb-1 group-hover:text-brand-600 transition-colors uppercase tracking-tight truncate">{p.title}</h4>
-                        <p className="text-brand-500 font-black text-xl mb-3">{p.formattedPrice}</p>
-                        <div className="flex items-center text-slate-400 text-sm font-bold">
-                          <MapPin className="w-4 h-4 mr-1 text-slate-300" /> {p.city}, {p.state}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
               </div>
             </div>
           </div>
@@ -287,38 +249,6 @@ const PropertyDetails = () => {
                   {isInquirySubmitting ? "Sending..." : "Send Inquiry"}
                 </button>
               </form>
-            </div>
-
-            <div className="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-sm text-black">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-black text-slate-900">Bank Loan Offers</h3>
-                <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-                  <Percent className="w-6 h-6" />
-                </div>
-              </div>
-
-              <div className="space-y-6 mb-8">
-                {[
-                  { bank: "HDFC Bank", rate: "8.35%", processing: "0.5%" },
-                  { bank: "SBI Home Loans", rate: "8.40%", processing: "Nil" },
-                  { bank: "ICICI Bank", rate: "8.45%", processing: "0.25%" },
-                ].map((offer, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div>
-                      <p className="font-extrabold text-slate-900">{offer.bank}</p>
-                      <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Processing: {offer.processing}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-emerald-600 font-black text-lg">{offer.rate}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase">Int. Rate</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <button className="w-full bg-slate-900 text-white py-4 rounded-[1.25rem] font-black hover:bg-brand-500 transition-colors shadow-lg active:scale-95 flex items-center justify-center gap-2">
-                Check Eligibility <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>
